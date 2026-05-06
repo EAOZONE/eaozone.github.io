@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Projects — Ben Pratt</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <style>
+    .page-header {
+      padding: 4rem 2rem 2.5rem;
+      max-width: 1100px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 1;
+      border-bottom: 1px solid var(--border);
+    }
+    .page-header h1 { font-size: clamp(2.5rem,5vw,4rem); font-weight:800; color:#fff; line-height:1; letter-spacing:-.02em; }
+    .page-header h1 span { color: var(--accent); }
+    .page-header p { color:var(--muted); font-size:.95rem; margin-top:.75rem; font-family:var(--font-mono); }
+
+    .filters { max-width:1100px; margin:2rem auto 0; padding:0 2rem; display:flex; gap:.6rem; flex-wrap:wrap; position:relative; z-index:1; }
+    .filter-btn { font-family:var(--font-mono); font-size:.65rem; letter-spacing:.12em; text-transform:uppercase; padding:.4rem .9rem; border:1px solid var(--border2); background:transparent; color:var(--muted); border-radius:2px; transition:all .2s; }
+    .filter-btn:hover,.filter-btn.active { border-color:var(--accent); color:var(--accent); background:rgba(0,229,255,.06); }
+
+    .projects-grid { max-width:1100px; margin:2.5rem auto 0; padding:0 2rem 4rem; display:grid; grid-template-columns:repeat(auto-fill,minmax(320px,1fr)); gap:1.5rem; position:relative; z-index:1; }
+
+    .card { background:var(--bg2); border:1px solid var(--border); border-radius:var(--radius); overflow:hidden; position:relative; }
+    .card:not(.expanded):hover { border-color:var(--border2); transform:translateY(-3px); box-shadow:0 12px 40px rgba(0,0,0,.5); transition:border-color .25s,transform .25s,box-shadow .25s; }
+    .card.expanded { border-color:var(--accent); box-shadow:0 0 0 1px var(--accent),var(--glow); }
+
+    .card-header { cursor:pointer; position:relative; }
+    .card-img { width:100%; height:180px; object-fit:cover; display:block; filter:grayscale(30%) brightness(.85); transition:filter .3s; }
+    .card-header:hover .card-img { filter:grayscale(10%) brightness(.95); }
+    .card-img-placeholder { width:100%; height:180px; background:var(--bg3); display:flex; align-items:center; justify-content:center; font-family:var(--font-mono); font-size:.65rem; color:var(--border2); letter-spacing:.15em; text-transform:uppercase; }
+    .card-body { padding:1.25rem 1.5rem 1rem; }
+    .card-meta { font-family:var(--font-mono); font-size:.6rem; color:var(--accent2); letter-spacing:.15em; text-transform:uppercase; margin-bottom:.5rem; }
+    .card-title { font-size:1.1rem; font-weight:700; color:#fff; margin-bottom:.4rem; line-height:1.25; }
+    .card-summary { font-size:.85rem; color:var(--muted); line-height:1.6; }
+    .card-tap-hint { font-family:var(--font-mono); font-size:.6rem; color:var(--border2); letter-spacing:.12em; padding:0 1.5rem .9rem; display:flex; align-items:center; gap:.4rem; transition:color .2s; }
+    .card-header:hover .card-tap-hint { color:var(--accent); }
+    .card.expanded .card-tap-hint { display:none; }
+
+    .card-chevron { position:absolute; top:.85rem; right:.85rem; width:26px; height:26px; background:rgba(8,12,16,.7); border:1px solid var(--border2); border-radius:50%; display:flex; align-items:center; justify-content:center; transition:transform .3s,border-color .3s; backdrop-filter:blur(4px); }
+    .card.expanded .card-chevron { transform:rotate(180deg); border-color:var(--accent); }
+    .card-chevron svg { width:10px; fill:none; stroke:var(--muted); stroke-width:2; }
+    .card.expanded .card-chevron svg { stroke:var(--accent); }
+
+    .card-expand { max-height:0; overflow:hidden; transition:max-height .45s cubic-bezier(0.4,0,0.2,1); }
+    .card.expanded .card-expand { max-height:2000px; }
+    .card-expand-inner { border-top:1px solid var(--border); padding:1.25rem 1.5rem 1.5rem; }
+
+    .media-gallery { margin-bottom:1.25rem; }
+    .media-gallery-label { font-family:var(--font-mono); font-size:.58rem; color:var(--muted); letter-spacing:.18em; text-transform:uppercase; margin-bottom:.65rem; }
+
+    .img-strip { display:flex; gap:.6rem; overflow-x:auto; padding-bottom:.4rem; scrollbar-width:thin; scrollbar-color:var(--border2) transparent; }
+    .img-strip::-webkit-scrollbar { height:3px; }
+    .img-strip::-webkit-scrollbar-thumb { background:var(--border2); border-radius:2px; }
+    .img-thumb { flex-shrink:0; width:140px; height:90px; object-fit:cover; border-radius:3px; border:1px solid var(--border); cursor:pointer; transition:border-color .2s,transform .2s; filter:brightness(.85); }
+    .img-thumb:hover { border-color:var(--accent); transform:scale(1.03); filter:brightness(1); }
+
+    .video-strip { display:flex; gap:.6rem; overflow-x:auto; padding-bottom:.4rem; margin-top:.5rem; scrollbar-width:thin; scrollbar-color:var(--border2) transparent; }
+    .video-strip::-webkit-scrollbar { height:3px; }
+    .video-strip::-webkit-scrollbar-thumb { background:var(--border2); border-radius:2px; }
+
+    .video-thumb-wrap { flex-shrink:0; position:relative; width:200px; height:112px; border-radius:3px; overflow:hidden; border:1px solid var(--border); cursor:pointer; transition:border-color .2s; background:var(--bg3); }
+    .video-thumb-wrap:hover { border-color:var(--accent); }
+    .video-thumb-wrap video { width:100%; height:100%; object-fit:cover; filter:brightness(.7); pointer-events:none; }
+    .video-thumb-wrap:hover video { filter:brightness(.88); }
+    .video-play-btn { position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:.3rem; }
+    .video-play-icon { width:36px; height:36px; background:rgba(0,229,255,.15); border:1.5px solid var(--accent); border-radius:50%; display:flex; align-items:center; justify-content:center; backdrop-filter:blur(4px); transition:background .2s,transform .2s; }
+    .video-thumb-wrap:hover .video-play-icon { background:rgba(0,229,255,.3); transform:scale(1.08); }
+    .video-play-icon svg { width:12px; fill:var(--accent); margin-left:2px; }
+    .video-caption { font-family:var(--font-mono); font-size:.55rem; color:rgba(255,255,255,.75); letter-spacing:.08em; text-align:center; padding:0 .25rem; line-height:1.3; }
+
+    .video-player-wrap { margin-top:.75rem; display:none; border-radius:4px; overflow:hidden; border:1px solid var(--accent); box-shadow:var(--glow); position:relative; background:#000; }
+    .video-player-wrap.active { display:block; }
+    .video-player-wrap video { width:100%; aspect-ratio:16/9; display:block; }
+    .video-close { position:absolute; top:.5rem; right:.5rem; width:24px; height:24px; background:rgba(8,12,16,.8); border:1px solid var(--border2); border-radius:50%; display:flex; align-items:center; justify-content:center; cursor:pointer; z-index:10; font-size:.75rem; color:var(--muted); transition:color .2s,border-color .2s; }
+    .video-close:hover { color:var(--accent); border-color:var(--accent); }
+
+    .expand-list { margin:1rem 0; padding-left:0; list-style:none; }
+    .expand-list li { font-size:.85rem; color:var(--text); line-height:1.65; padding:.25rem 0 .25rem 1.1rem; position:relative; }
+    .expand-list li::before { content:'→'; position:absolute; left:0; color:var(--accent); font-size:.65rem; top:.4rem; }
+
+    .card-links { display:flex; gap:.75rem; flex-wrap:wrap; margin-top:1.25rem; }
+
+    .lightbox { display:none; position:fixed; inset:0; background:rgba(0,0,0,.92); z-index:9000; align-items:center; justify-content:center; backdrop-filter:blur(8px); }
+    .lightbox.open { display:flex; }
+    .lightbox img { max-width:90vw; max-height:85vh; object-fit:contain; border-radius:4px; border:1px solid var(--border2); box-shadow:0 0 60px rgba(0,0,0,.8); }
+    .lightbox-close { position:absolute; top:1.25rem; right:1.5rem; font-family:var(--font-mono); font-size:.75rem; color:var(--muted); cursor:pointer; border:1px solid var(--border2); padding:.35rem .75rem; border-radius:3px; transition:color .2s,border-color .2s; background:rgba(8,12,16,.8); }
+    .lightbox-close:hover { color:var(--accent); border-color:var(--accent); }
+
+    .card[data-hidden="true"] { display:none; }
+    @media (max-width:640px) { .projects-grid { grid-template-columns:1fr; } }
+  </style>
+</head>
+<body>
+  <div class="grid-bg"></div>
+  <div class="lightbox" id="lightbox" onclick="closeLightbox(event)">
+    <div class="lightbox-close" onclick="closeLightbox()">&#10005; close</div>
+    <img id="lightboxImg" src="" alt="" />
+  </div>
+
+  <nav>
+    <div class="nav-logo">ben_pratt</div>
+    <ul class="nav-links">
+      <li><a href="index.html">About</a></li>
+      <li><a href="resume.html">Resume</a></li>
+      <li><a href="projects.html" class="active">Projects</a></li>
+      <li><a href="contact.html">Contact</a></li>
+    </ul>
+  </nav>
+
+  <main>
+    <div class="page-header fade-up">
+      <div class="section-label">Portfolio</div>
+      <h1>My <span>Projects</span></h1>
+      <p>// click any card to expand images, videos &amp; details</p>
+    </div>
+
+    <div class="filters fade-up fade-up-1">
+      <button class="filter-btn active" data-filter="all">All</button>
+      <button class="filter-btn" data-filter="robotics">Robotics</button>
+      <button class="filter-btn" data-filter="game">Game Dev</button>
+      <button class="filter-btn" data-filter="research">Research</button>
+      <button class="filter-btn" data-filter="software">Software</button>
+    </div>
+
+    <div class="projects-grid fade-up fade-up-2" id="grid">
+
+      <!-- ══ RIDE DESIGN VEHICLE ══ -->
+      <div class="card" data-tags="robotics">
+        <div class="card-header" onclick="toggleCard(this.closest('.card'))">
+          <div class="card-chevron"><svg viewBox="0 0 10 6"><polyline points="1,1 5,5 9,1"/></svg></div>
+          <img class="card-img" src="media/Full Assembly Picture.jpg" alt="Ride Design Vehicle" style="object-position:center;" />
+          <div class="card-body">
+            <div class="card-meta">Engineering · TPED 2026</div>
+            <div class="card-title">Ride Design Vehicle</div>
+            <div class="card-summary">4-DOF motion base vehicle prototype for immersive attraction design, featuring integrated pitch, roll, and yaw control.</div>
+          </div>
+          <div class="card-tap-hint">&#9658;&nbsp; expand for videos</div>
+        </div>
+        <div class="card-expand"><div class="card-expand-inner">
+          <div class="media-gallery">
+            <div class="media-gallery-label">Videos</div>
+            <div class="video-strip">
+              <div class="video-thumb-wrap" onclick="playVideo(this,'ride-demo')">
+                <video src="media/Demonstration.mov" muted preload="metadata"></video>
+                <div class="video-play-btn"><div class="video-play-icon"><svg viewBox="0 0 10 12"><polygon points="0,0 10,6 0,12"/></svg></div><span class="video-caption">Demonstration</span></div>
+              </div>
+              <div class="video-thumb-wrap" onclick="playVideo(this,'ride-pov')">
+                <video src="media/Short POV.mov" muted preload="metadata"></video>
+                <div class="video-play-btn"><div class="video-play-icon"><svg viewBox="0 0 10 12"><polygon points="0,0 10,6 0,12"/></svg></div><span class="video-caption">Short POV</span></div>
+              </div>
+              <div class="video-thumb-wrap" onclick="playVideo(this,'ride-yaw')">
+                <video src="media/Ride Vehicle Yaw.mov" muted preload="metadata"></video>
+                <div class="video-play-btn"><div class="video-play-icon"><svg viewBox="0 0 10 12"><polygon points="0,0 10,6 0,12"/></svg></div><span class="video-caption">Yaw Control</span></div>
+              </div>
+              <div class="video-thumb-wrap" onclick="playVideo(this,'ride-drop')">
+                <video src="media/Drop Track.mp4" muted preload="metadata"></video>
+                <div class="video-play-btn"><div class="video-play-icon"><svg viewBox="0 0 10 12"><polygon points="0,0 10,6 0,12"/></svg></div><span class="video-caption">Drop Track</span></div>
+              </div>
+            </div>
+            <div class="video-player-wrap" id="player-ride-demo"><div class="video-close" onclick="closeVideo('ride-demo')">&#10005;</div><video controls preload="none"><source src="media/Demonstration.mov"></video></div>
+            <div class="video-player-wrap" id="player-ride-pov"><div class="video-close" onclick="closeVideo('ride-pov')">&#10005;</div><video controls preload="none"><source src="media/Short POV.mov"></video></div>
+            <div class="video-player-wrap" id="player-ride-yaw"><div class="video-close" onclick="closeVideo('ride-yaw')">&#10005;</div><video controls preload="none"><source src="media/Ride Vehicle Yaw.mov"></video></div>
+            <div class="video-player-wrap" id="player-ride-drop"><div class="video-close" onclick="closeVideo('ride-drop')">&#10005;</div><video controls preload="none"><source src="media/Drop Track.mp4" type="video/mp4"></video></div>
+          </div>
+          <ul class="expand-list">
+            <li>Designed and fabricated a 4-DOF motion base vehicle for the UF Theme Park Engineering & Design (TPED) club.</li>
+            <li>Developed control software for real-time synchronization between ride motion and visual media.</li>
+            <li>Implemented complex motion profiles including high-velocity drops and precise yaw/pitch/roll transitions.</li>
+            <li>Collaborated with a multidisciplinary team to ensure safety standards and rider comfort.</li>
+          </ul>
+          <div class="card-links"><span class="btn btn-ghost" style="cursor:default;">UF Theme Park Engineering</span></div>
+        </div></div>
+      </div>
+
+      <!-- ══ ROBOTIC ARM ══ -->
+      <div class="card" data-tags="robotics">
+        <div class="card-header" onclick="toggleCard(this.closest('.card'))">
+          <div class="card-chevron"><svg viewBox="0 0 10 6"><polyline points="1,1 5,5 9,1"/></svg></div>
+          <img class="card-img" src="media/Robotic_Arm.jpg" alt="Robotic Arm Manipulation" style="object-position:center top;" />
+          <div class="card-body">
+            <div class="card-meta">Robotics · UF 2025</div>
+            <div class="card-title">Learning-Based Robotic Manipulation</div>
+            <div class="card-summary">Modular autonomous agent pipeline featuring LLM-based planning and visuomotor policies for physical object manipulation.</div>
+          </div>
+          <div class="card-tap-hint">&#9658;&nbsp; expand for video &amp; details</div>
+        </div>
+        <div class="card-expand"><div class="card-expand-inner">
+          <div class="media-gallery">
+            <div class="media-gallery-label">Videos</div>
+            <div class="video-strip">
+              <div class="video-thumb-wrap" onclick="playVideo(this,'robotic-arm')">
+                <video src="media/Robotic_arm.mp4" muted preload="metadata"></video>
+                <div class="video-play-btn"><div class="video-play-icon"><svg viewBox="0 0 10 12"><polygon points="0,0 10,6 0,12"/></svg></div><span class="video-caption">Robotic Arm Demo</span></div>
+              </div>
+            </div>
+            <div class="video-player-wrap" id="player-robotic-arm">
+              <div class="video-close" onclick="closeVideo('robotic-arm')">&#10005;</div>
+              <video controls preload="none"><source src="media/Robotic_arm.mp4" type="video/mp4"></video>
+            </div>
+          </div>
+          <ul class="expand-list">
+            <li>Developed a modular autonomous agent pipeline with an LLM planning node to parse natural language into structured goals.</li>
+            <li>Implemented a visuomotor policy for physical execution using imitation learning.</li>
+            <li>Built on ROS2-based infrastructure for robust communication between planning and execution nodes.</li>
+            <li>Executed full experimental cycle: teleoperation data collection, policy training, and hardware deployment.</li>
+          </ul>
+        </div></div>
+      </div>
+
+      <!-- ══ ANIMATRONIC GATOR ══ -->
+      <div class="card" data-tags="robotics">
+        <div class="card-header" onclick="toggleCard(this.closest('.card'))">
+          <div class="card-chevron"><svg viewBox="0 0 10 6"><polyline points="1,1 5,5 9,1"/></svg></div>
+          <img class="card-img" src="media/Animatronic.jpg" alt="Animatronic Gator Head" style="object-position:center top;" />
+          <div class="card-body">
+            <div class="card-meta">Robotics · 2025–2026</div>
+            <div class="card-title">Animatronic Gator Head</div>
+            <div class="card-summary">Full-stack animatronic control pipeline for a multi-DOF gator head — servos, digital twin, and audio-reactive jaw.</div>
+          </div>
+          <div class="card-tap-hint">&#9658;&nbsp; expand for video</div>
+        </div>
+        <div class="card-expand"><div class="card-expand-inner">
+          <div class="media-gallery">
+            <div class="media-gallery-label">Videos</div>
+            <div class="video-strip">
+              <div class="video-thumb-wrap" onclick="playVideo(this,'gator-vid')">
+                <video src="media/01_Animatronic_Video.mp4" muted preload="metadata"></video>
+                <div class="video-play-btn"><div class="video-play-icon"><svg viewBox="0 0 10 12"><polygon points="0,0 10,6 0,12"/></svg></div><span class="video-caption">Animatronic Demo</span></div>
+              </div>
+            </div>
+            <div class="video-player-wrap" id="player-gator-vid">
+              <div class="video-close" onclick="closeVideo('gator-vid')">&#10005;</div>
+              <video controls preload="none"><source src="media/01_Animatronic_Video.mp4" type="video/mp4"></video>
+            </div>
+          </div>
+          <ul class="expand-list">
+            <li>Coordinated servo control (jaw, eyes, brows) via Arduino / PCA9685 for expressive animatronic performance.</li>
+            <li>Built a Unity digital twin to prototype motion sequences and export CSV-driven animation curves for sim-to-real deployment.</li>
+            <li>Integrated audio-reactive jaw motion using FFT-based amplitude mapping.</li>
+            <li>Engineered cross-platform comms between Unity, Python, and embedded controllers for modular show-control integration.</li>
+          </ul>
+          <div class="card-links"><span class="btn btn-ghost" style="cursor:default;">UF Theme Park Engineering</span></div>
+        </div></div>
+      </div>
+
+      <!-- ══ DIFFUSION POLICY ══ -->
+      <div class="card" data-tags="research robotics">
+        <div class="card-header" onclick="toggleCard(this.closest('.card'))">
+          <div class="card-chevron"><svg viewBox="0 0 10 6"><polyline points="1,1 5,5 9,1"/></svg></div>
+          <img class="card-img" src="media/unitree-h1-2.webp" alt="Diffusion Policy Training" style="object-position:center top;" />
+          <div class="card-body">
+            <div class="card-meta">Research · IHMC 2025</div>
+            <div class="card-title">Diffusion Policy Training</div>
+            <div class="card-summary">End-to-end teleoperation-to-autonomy pipeline for the Unitree H1-2 humanoid robot using Lerobot's diffusion policy.</div>
+          </div>
+          <div class="card-tap-hint">&#9658;&nbsp; expand for video</div>
+        </div>
+        <div class="card-expand"><div class="card-expand-inner">
+          <div class="media-gallery">
+            <div class="media-gallery-label">Videos</div>
+            <div class="video-strip">
+              <div class="video-thumb-wrap" onclick="playVideo(this,'diff-vid')">
+                <video src="media/01_5124.mp4" muted preload="metadata"></video>
+                <div class="video-play-btn"><div class="video-play-icon"><svg viewBox="0 0 10 12"><polygon points="0,0 10,6 0,12"/></svg></div><span class="video-caption">Diffusion Policy Demo</span></div>
+              </div>
+            </div>
+            <div class="video-player-wrap" id="player-diff-vid">
+              <div class="video-close" onclick="closeVideo('diff-vid')">&#10005;</div>
+              <video controls preload="none"><source src="media/01_5124.mp4" type="video/mp4"></video>
+            </div>
+          </div>
+          <ul class="expand-list">
+            <li>Collected training data via VR teleoperation and trained autonomous behaviors with Lerobot's diffusion policy framework.</li>
+            <li>Integrated Python Lerobot code with custom Java control systems through ROS2 for seamless cross-language communication.</li>
+            <li>Implemented control interfaces for Psyonic Ability Hands enabling dexterous manipulation.</li>
+          </ul>
+        </div></div>
+      </div>
+
+      <!-- ══ MOTION CAPTURE ══ -->
+      <div class="card" data-tags="research robotics">
+        <div class="card-header" onclick="toggleCard(this.closest('.card'))">
+          <div class="card-chevron"><svg viewBox="0 0 10 6"><polyline points="1,1 5,5 9,1"/></svg></div>
+          <img class="card-img" src="media/MoCap.png" alt="Motion Capture System" style="object-position:center top;" />
+          <div class="card-body">
+            <div class="card-meta">Research · IHMC 2024</div>
+            <div class="card-title">Motion Capture System</div>
+            <div class="card-summary">Java pipeline mapping full-body pose from an 8-camera Blackfly MoCap rig to three different robot platforms.</div>
+          </div>
+          <div class="card-tap-hint">&#9658;&nbsp; expand for images &amp; videos</div>
+        </div>
+        <div class="card-expand"><div class="card-expand-inner">
+          <div class="media-gallery">
+            <div class="media-gallery-label">Videos</div>
+            <div class="video-strip">
+              <div class="video-thumb-wrap" onclick="playVideo(this,'mc-franka')">
+                <video src="media/09_Untitled_video_Clipchamp.mp4" muted preload="metadata"></video>
+                <div class="video-play-btn"><div class="video-play-icon"><svg viewBox="0 0 10 12"><polygon points="0,0 10,6 0,12"/></svg></div><span class="video-caption">Franka Arms</span></div>
+              </div>
+              <div class="video-thumb-wrap" onclick="playVideo(this,'mc-full')">
+                <video src="media/11_PXL_20240813_153804993.mp4" muted preload="metadata"></video>
+                <div class="video-play-btn"><div class="video-play-icon"><svg viewBox="0 0 10 12"><polygon points="0,0 10,6 0,12"/></svg></div><span class="video-caption">Full Robot MoCap</span></div>
+              </div>
+              <div class="video-thumb-wrap" onclick="playVideo(this,'mc-lab')">
+                <video src="media/08_20240719_120036.mp4" muted preload="metadata"></video>
+                <div class="video-play-btn"><div class="video-play-icon"><svg viewBox="0 0 10 12"><polygon points="0,0 10,6 0,12"/></svg></div><span class="video-caption">Lab Demo</span></div>
+              </div>
+            </div>
+            <div class="video-player-wrap" id="player-mc-franka"><div class="video-close" onclick="closeVideo('mc-franka')">&#10005;</div><video controls preload="none"><source src="media/09_Untitled_video_Clipchamp.mp4" type="video/mp4"></video></div>
+            <div class="video-player-wrap" id="player-mc-full"><div class="video-close" onclick="closeVideo('mc-full')">&#10005;</div><video controls preload="none"><source src="media/11_PXL_20240813_153804993.mp4" type="video/mp4"></video></div>
+            <div class="video-player-wrap" id="player-mc-lab"><div class="video-close" onclick="closeVideo('mc-lab')">&#10005;</div><video controls preload="none"><source src="media/08_20240719_120036.mp4" type="video/mp4"></video></div>
+          </div>
+          <ul class="expand-list">
+            <li>Parsed pose data from 8 Blackfly cameras and converted it into control signals for Psyonic Ability Hands, Franka Arms, and IHMC's Nadia humanoid.</li>
+            <li>Extended system to drive IHMC's Nadia full humanoid robot in collaboration with a senior researcher.</li>
+          </ul>
+        </div></div>
+      </div>
+
+      <!-- ══ VR CONTROLS ══ -->
+      <div class="card" data-tags="research robotics">
+        <div class="card-header" onclick="toggleCard(this.closest('.card'))">
+          <div class="card-chevron"><svg viewBox="0 0 10 6"><polyline points="1,1 5,5 9,1"/></svg></div>
+          <img class="card-img" src="media/nadia_edited.jpg" alt="Nadia Robot" />
+          <div class="card-body">
+            <div class="card-meta">Research · IHMC 2023</div>
+            <div class="card-title">VR Robot Controls</div>
+            <div class="card-summary">Custom VR interaction systems for controlling IHMC's humanoid robots — camera bounding boxes, radial menus, arm/hand control.</div>
+          </div>
+          <div class="card-tap-hint">&#9658;&nbsp; expand for images &amp; videos</div>
+        </div>
+        <div class="card-expand"><div class="card-expand-inner">
+          <div class="media-gallery">
+            <div class="media-gallery-label">Images</div>
+            <div class="img-strip">
+              <img class="img-thumb" onclick="openLightbox(this.src)" src="media/nadia_edited.jpg" alt="Nadia robot" />
+            </div>
+          </div>
+          <div class="media-gallery">
+            <div class="media-gallery-label">Videos</div>
+            <div class="video-strip">
+              <div class="video-thumb-wrap" onclick="playVideo(this,'vr-door')">
+                <video src="media/03_vid_20230811_170723.mp4" muted preload="metadata"></video>
+                <div class="video-play-btn"><div class="video-play-icon"><svg viewBox="0 0 10 12"><polygon points="0,0 10,6 0,12"/></svg></div><span class="video-caption">Door Navigation</span></div>
+              </div>
+              <div class="video-thumb-wrap" onclick="playVideo(this,'vr-sim1')">
+                <video src="media/04_Nadia_Simulation_UI_2023-10-17_11-55-22.mp4" muted preload="metadata"></video>
+                <div class="video-play-btn"><div class="video-play-icon"><svg viewBox="0 0 10 12"><polygon points="0,0 10,6 0,12"/></svg></div><span class="video-caption">Nadia Sim UI 1</span></div>
+              </div>
+              <div class="video-thumb-wrap" onclick="playVideo(this,'vr-sim2')">
+                <video src="media/05_Nadia_Simulation_UI_2023-10-17_11-54-18.mp4" muted preload="metadata"></video>
+                <div class="video-play-btn"><div class="video-play-icon"><svg viewBox="0 0 10 12"><polygon points="0,0 10,6 0,12"/></svg></div><span class="video-caption">Nadia Sim UI 2</span></div>
+              </div>
+              <div class="video-thumb-wrap" onclick="playVideo(this,'vr-sim3')">
+                <video src="media/06_Nadia_Simulation_UI_2023-10-17_11-52-48.mp4" muted preload="metadata"></video>
+                <div class="video-play-btn"><div class="video-play-icon"><svg viewBox="0 0 10 12"><polygon points="0,0 10,6 0,12"/></svg></div><span class="video-caption">Nadia Sim UI 3</span></div>
+              </div>
+              <div class="video-thumb-wrap" onclick="playVideo(this,'vr-view')">
+                <video src="media/07_VR_View_2023-10-17_12-15-31.mp4" muted preload="metadata"></video>
+                <div class="video-play-btn"><div class="video-play-icon"><svg viewBox="0 0 10 12"><polygon points="0,0 10,6 0,12"/></svg></div><span class="video-caption">VR View</span></div>
+              </div>
+            </div>
+            <div class="video-player-wrap" id="player-vr-door"><div class="video-close" onclick="closeVideo('vr-door')">&#10005;</div><video controls preload="none"><source src="media/03_vid_20230811_170723.mp4" type="video/mp4"></video></div>
+            <div class="video-player-wrap" id="player-vr-sim1"><div class="video-close" onclick="closeVideo('vr-sim1')">&#10005;</div><video controls preload="none"><source src="media/04_Nadia_Simulation_UI_2023-10-17_11-55-22.mp4" type="video/mp4"></video></div>
+            <div class="video-player-wrap" id="player-vr-sim2"><div class="video-close" onclick="closeVideo('vr-sim2')">&#10005;</div><video controls preload="none"><source src="media/05_Nadia_Simulation_UI_2023-10-17_11-54-18.mp4" type="video/mp4"></video></div>
+            <div class="video-player-wrap" id="player-vr-sim3"><div class="video-close" onclick="closeVideo('vr-sim3')">&#10005;</div><video controls preload="none"><source src="media/06_Nadia_Simulation_UI_2023-10-17_11-52-48.mp4" type="video/mp4"></video></div>
+            <div class="video-player-wrap" id="player-vr-view"><div class="video-close" onclick="closeVideo('vr-view')">&#10005;</div><video controls preload="none"><source src="media/07_VR_View_2023-10-17_12-15-31.mp4" type="video/mp4"></video></div>
+          </div>
+          <ul class="expand-list">
+            <li>Built a movable camera bounding box for Blackfly projections so operators can reframe views without leaving VR.</li>
+            <li>Designed a radial menu triggered by controller proximity to robot hands — eliminates need to exit VR for pose changes.</li>
+            <li>Extended locomotion controls for remote teleoperation of IHMC's humanoid robot platform.</li>
+          </ul>
+        </div></div>
+      </div>
+
+      <!-- ══ JAR OF JOY ══ -->
+      <div class="card" data-tags="software">
+        <div class="card-header" onclick="toggleCard(this.closest('.card'))">
+          <div class="card-chevron"><svg viewBox="0 0 10 6"><polyline points="1,1 5,5 9,1"/></svg></div>
+          <img class="card-img" src="media/Screenshot 2025-05-03 094342.png" alt="Jar of Joy" />
+          <div class="card-body">
+            <div class="card-meta">Software Engineering · UF</div>
+            <div class="card-title">Jar of Joy</div>
+            <div class="card-summary">Full-stack web app with user authentication and dynamic database, built with React, Python, and MySQL.</div>
+          </div>
+          <div class="card-tap-hint">&#9658;&nbsp; expand for details</div>
+        </div>
+        <div class="card-expand"><div class="card-expand-inner">
+          <div class="media-gallery">
+            <div class="media-gallery-label">Screenshots</div>
+            <div class="img-strip">
+              <img class="img-thumb" onclick="openLightbox(this.src)" src="media/Screenshot 2025-05-03 094342.png" alt="Jar of Joy" />
+            </div>
+          </div>
+          <ul class="expand-list">
+            <li>Team of 4 — React/JS/CSS frontend, Python + MySQL backend.</li>
+            <li>Implemented user authentication and a dynamic, per-user database.</li>
+          </ul>
+          <div class="card-links"><a href="https://github.com/EAOZONE/SWE25.git" target="_blank" class="btn">View Code</a></div>
+        </div></div>
+      </div>
+
+      <!-- ══ MOVIE GRAPH VISUALIZER ══ -->
+      <div class="card" data-tags="software">
+        <div class="card-header" onclick="toggleCard(this.closest('.card'))">
+          <div class="card-chevron"><svg viewBox="0 0 10 6"><polyline points="1,1 5,5 9,1"/></svg></div>
+          <img class="card-img" src="media/Screenshot 2024-12-16 114525.png" alt="Movie Graph Visualizer" />
+          <div class="card-body">
+            <div class="card-meta">Data Structures · UF</div>
+            <div class="card-title">Movie Graph Visualizer</div>
+            <div class="card-summary">BFS vs Dijkstra visualizer over a 45,000-movie/actor dataset, built in HTML + JavaScript.</div>
+          </div>
+          <div class="card-tap-hint">&#9658;&nbsp; expand for details</div>
+        </div>
+        <div class="card-expand"><div class="card-expand-inner">
+          <div class="media-gallery">
+            <div class="media-gallery-label">Screenshots</div>
+            <div class="img-strip">
+              <img class="img-thumb" onclick="openLightbox(this.src)" src="media/Screenshot 2024-12-16 114525.png" alt="Movie Graph Visualizer" />
+            </div>
+            <div class="video-strip">
+              <div class="video-thumb-wrap" onclick="playVideo(this,'graph-vid')">
+                <video src="media/Movie_Graph.mp4" muted preload="metadata"></video>
+                <div class="video-play-btn"><div class="video-play-icon"><svg viewBox="0 0 10 12"><polygon points="0,0 10,6 0,12"/></svg></div><span class="video-caption">Movie Graph Visualizer Demo</span></div>
+              </div>
+            </div>
+            <div class="video-player-wrap" id="player-graph-vid">
+              <div class="video-close" onclick="closeVideo('graph-vid')">&#10005;</div>
+              <video controls preload="none"><source src="media/Movie_Graph.mp4" type="video/mp4"></video>
+            </div>
+          </div>
+          <ul class="expand-list">
+            <li>Team of 3 — implemented both BFS and Dijkstra to find connections between any two movies.</li>
+            <li>Interactive website lets users visualize all connections from a single movie or find shortest paths between two.</li>
+            <li>Dataset: 45,000+ movies and actors.</li>
+          </ul>
+          <div class="card-links"><a href="https://github.com/c-schutz/DSAProject3" target="_blank" class="btn">View Code</a></div>
+        </div></div>
+      </div>
+
+      <!-- ══ 2D UNITY GAME ══ -->
+      <div class="card" data-tags="game">
+        <div class="card-header" onclick="toggleCard(this.closest('.card'))">
+          <div class="card-chevron"><svg viewBox="0 0 10 6"><polyline points="1,1 5,5 9,1"/></svg></div>
+          <img class="card-img" src="media/Robot_Rockus.png" alt="Robot Ruckus Game" />
+          <div class="card-body">
+            <div class="card-meta">Game Dev · UF Digital Arts</div>
+            <div class="card-title">2D Unity Game — Robot Ruckus</div>
+            <div class="card-summary">Fully playable game built in Unity with C# — custom animations, physics, and polished UI/UX.</div>
+          </div>
+          <div class="card-tap-hint">&#9658;&nbsp; expand for details</div>
+        </div>
+        <div class="card-expand"><div class="card-expand-inner">
+          <ul class="expand-list">
+            <li>Implemented core gameplay systems in C# with structured OOP logic and optimized performance.</li>
+            <li>Created all character and environment animations from scratch and wired them into Unity's animation state machine.</li>
+            <li>Designed controls, feedback systems, and UI for smooth, intuitive gameplay.</li>
+          </ul>
+          <div class="card-links"><a href="https://h2ozone.itch.io/robot-rockus" target="_blank" class="btn">Play Game</a></div>
+        </div></div>
+      </div>
+
+      <!-- ══ BLOB TOWN ══ -->
+      <div class="card" data-tags="game">
+        <div class="card-header" onclick="toggleCard(this.closest('.card'))">
+          <div class="card-chevron"><svg viewBox="0 0 10 6"><polyline points="1,1 5,5 9,1"/></svg></div>
+          <img class="card-img" src="media/Screenshot 2024-08-14 135421.png" alt="Blob Town" />
+          <div class="card-body">
+            <div class="card-meta">Game Dev · FBLA 2022</div>
+            <div class="card-title">Blob Town</div>
+            <div class="card-summary">Python Pygame platformer with a custom level editor. 🏆 1st place — FBLA Regionals Computer Game &amp; Simulation Programming.</div>
+          </div>
+          <div class="card-tap-hint">&#9658;&nbsp; expand for details</div>
+        </div>
+        <div class="card-expand"><div class="card-expand-inner">
+          <div class="media-gallery">
+            <div class="media-gallery-label">Screenshots</div>
+            <div class="img-strip">
+              <img class="img-thumb" onclick="openLightbox(this.src)" src="media/Screenshot 2024-08-14 135421.png" alt="Blob Town" />
+            </div>
+          </div>
+          <ul class="expand-list">
+            <li>Built a full platformer in Python + Pygame using open-source graphics.</li>
+            <li>Shipped a custom level editor so players can build and save their own levels.</li>
+            <li>1st place at FBLA regional competition, Computer Game &amp; Simulation Programming (2022).</li>
+          </ul>
+          <div class="card-links"><a href="https://github.com/EAOZONE/Blob-Town" target="_blank" class="btn">View Code</a></div>
+        </div></div>
+      </div>
+
+      <!-- ══ AI 3D PRINTER ══ -->
+      <div class="card" data-tags="robotics">
+        <div class="card-header" onclick="toggleCard(this.closest('.card'))">
+          <div class="card-chevron"><svg viewBox="0 0 10 6"><polyline points="1,1 5,5 9,1"/></svg></div>
+          <img class="card-img" src="media/20220325_222412 (1).jpg" alt="AI 3D Printer Robot" />
+          <div class="card-body">
+            <div class="card-meta">Robotics · Science Fair 2021–2022</div>
+            <div class="card-title">AI 3D Printer Robot</div>
+            <div class="card-summary">Converted a 3D printer into a pick-and-place arm using Python computer vision to detect and grab colored targets.</div>
+          </div>
+          <div class="card-tap-hint">&#9658;&nbsp; expand for images</div>
+        </div>
+        <div class="card-expand"><div class="card-expand-inner">
+          <div class="media-gallery">
+            <div class="media-gallery-label">Images</div>
+            <div class="img-strip">
+              <img class="img-thumb" onclick="openLightbox(this.src)" src="media/20220325_222412 (1).jpg" alt="3D printer robot" />
+            </div>
+            <div class="video-strip">
+              <div class="video-thumb-wrap" onclick="playVideo(this,'isef-vid')">
+                <video src="media/ISEF_Smaller.mp4" muted preload="metadata"></video>
+                <div class="video-play-btn"><div class="video-play-icon"><svg viewBox="0 0 10 12"><polygon points="0,0 10,6 0,12"/></svg></div><span class="video-caption">Animatronic Demo</span></div>
+              </div>
+            </div>
+            <div class="video-player-wrap" id="player-isef-vid">
+              <div class="video-close" onclick="closeVideo('isef-vid')">&#10005;</div>
+              <video controls preload="none"><source src="media/ISEF_Smaller.mp4" type="video/mp4"></video>
+            </div>
+          </div>
+          <ul class="expand-list">
+            <li>Mounted a top-down camera and used Python computer vision to locate red pom-pom balls in the workspace.</li>
+            <li>Converted gantry motion to robot arm kinematics, driving the end-effector precisely to detected targets.</li>
+            <li>Custom gripper attachment for physical object retrieval.</li>
+          </ul>
+          <div class="card-links"><a href="https://github.com/EAOZONE/ISEFCode" target="_blank" class="btn">View Code</a></div>
+        </div></div>
+      </div>
+
+      <!-- ══ GUESS WHO ROBOT ══ -->
+      <div class="card" data-tags="robotics">
+        <div class="card-header" onclick="toggleCard(this.closest('.card'))">
+          <div class="card-chevron"><svg viewBox="0 0 10 6"><polyline points="1,1 5,5 9,1"/></svg></div>
+          <img class="card-img" src="media/IMG_20200203_174949399.jpg" alt="Guess Who Robot" />
+          <div class="card-body">
+            <div class="card-meta">Robotics · Science Fair 2019–2020</div>
+            <div class="card-title">Guess Who Robot</div>
+            <div class="card-summary">Open-source robotic arm controlled by a Raspberry Pi to play the board game Guess Who using Python.</div>
+          </div>
+          <div class="card-tap-hint">&#9658;&nbsp; expand for images &amp; video</div>
+        </div>
+        <div class="card-expand"><div class="card-expand-inner">
+          <div class="media-gallery">
+            <div class="media-gallery-label">Images</div>
+            <div class="img-strip">
+              <img class="img-thumb" onclick="openLightbox(this.src)" src="media/IMG_20200203_174949399.jpg" alt="Guess Who robot" />
+            </div>
+          </div>
+          <div class="media-gallery">
+            <div class="media-gallery-label">Videos</div>
+            <div class="video-strip">
+              <div class="video-thumb-wrap" onclick="playVideo(this,'gw-vid')">
+                <video src="media/13_VID_20200105_104829571.mp4" muted preload="metadata"></video>
+                <div class="video-play-btn"><div class="video-play-icon"><svg viewBox="0 0 10 12"><polygon points="0,0 10,6 0,12"/></svg></div><span class="video-caption">Guess Who Demo</span></div>
+              </div>
+            </div>
+            <div class="video-player-wrap" id="player-gw-vid"><div class="video-close" onclick="closeVideo('gw-vid')">&#10005;</div><video controls preload="none"><source src="media/13_VID_20200105_104829571.mp4" type="video/mp4"></video></div>
+          </div>
+          <ul class="expand-list">
+            <li>Programmed a Raspberry Pi in Python to run game logic for Guess Who.</li>
+            <li>Arm physically interacts with the game board, flipping character panels in response to game state.</li>
+          </ul>
+          <div class="card-links"><a href="https://github.com/EAOZONE/GuessWhoCode/tree/main" target="_blank" class="btn">View Code</a></div>
+        </div></div>
+      </div>
+
+    </div>
+
+    <footer>
+      <span>© 2025 Ben Pratt</span>
+      <div class="footer-links">
+        <a href="mailto:c.ben.pratt@gmail.com">c.ben.pratt@gmail.com</a>
+        <a href="https://github.com/EAOZONE" target="_blank">GitHub</a>
+        <a href="https://www.linkedin.com/in/charles-pratt-919313291/" target="_blank">LinkedIn</a>
+      </div>
+    </footer>
+  </main>
+
+  <script>
+    function toggleCard(card) {
+      const wasExpanded = card.classList.contains('expanded');
+      document.querySelectorAll('.card.expanded').forEach(c => {
+        c.classList.remove('expanded');
+        c.querySelectorAll('.video-player-wrap.active').forEach(p => {
+          p.classList.remove('active');
+          p.querySelector('video').pause();
+        });
+      });
+      if (!wasExpanded) {
+        card.classList.add('expanded');
+        setTimeout(() => card.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 50);
+      }
+    }
+
+    function playVideo(thumbWrap, id) {
+      const player = document.getElementById('player-' + id);
+      if (!player) return;
+      // close other open players in same card
+      thumbWrap.closest('.card-expand-inner').querySelectorAll('.video-player-wrap.active').forEach(p => {
+        if (p !== player) { p.classList.remove('active'); p.querySelector('video').pause(); }
+      });
+      const vid = player.querySelector('video');
+      const isOpen = player.classList.contains('active');
+      if (isOpen) { player.classList.remove('active'); vid.pause(); return; }
+      player.classList.add('active');
+      vid.play();
+      setTimeout(() => player.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 80);
+    }
+
+    function closeVideo(id) {
+      const player = document.getElementById('player-' + id);
+      if (!player) return;
+      player.classList.remove('active');
+      player.querySelector('video').pause();
+    }
+
+    function openLightbox(src) {
+      document.getElementById('lightboxImg').src = src;
+      document.getElementById('lightbox').classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeLightbox(e) {
+      if (e && !e.target.classList.contains('lightbox') && !e.target.classList.contains('lightbox-close')) return;
+      document.getElementById('lightbox').classList.remove('open');
+      document.body.style.overflow = '';
+    }
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape') { document.getElementById('lightbox').classList.remove('open'); document.body.style.overflow = ''; }
+    });
+
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        const f = btn.dataset.filter;
+        document.querySelectorAll('.card').forEach(card => {
+          card.dataset.hidden = (f === 'all' || (card.dataset.tags||'').includes(f)) ? 'false' : 'true';
+        });
+      });
+    });
+  </script>
+</body>
+</html>

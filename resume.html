@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Charles Pratt — Software Engineer</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #080c10;
+    --surface: #0d1117;
+    --border: #1e2d3d;
+    --accent: #00d4ff;
+    --accent2: #7c3aed;
+    --text: #c9d1d9;
+    --text-dim: #6e7681;
+    --text-bright: #f0f6fc;
+    --green: #3fb950;
+    --mono: 'Space Mono', monospace;
+    --sans: 'Syne', sans-serif;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    line-height: 1.6;
+    min-height: 100vh;
+  }
+
+  /* Grid bg */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(0,212,255,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,212,255,0.03) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .container {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 60px 32px;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* Header */
+  header {
+    margin-bottom: 56px;
+    animation: fadeUp 0.6s ease both;
+  }
+
+  .header-top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 24px;
+    flex-wrap: wrap;
+  }
+
+  .name-block {}
+
+  .label {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--accent);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+
+  h1 {
+    font-family: var(--sans);
+    font-size: clamp(36px, 6vw, 56px);
+    font-weight: 800;
+    color: var(--text-bright);
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+  }
+
+  h1 span {
+    color: var(--accent);
+  }
+
+  .tagline {
+    font-family: var(--mono);
+    font-size: 13px;
+    color: var(--text-dim);
+    margin-top: 12px;
+  }
+
+  .contact-links {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    align-items: flex-end;
+    padding-top: 8px;
+  }
+
+  .contact-links a {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--text-dim);
+    text-decoration: none;
+    transition: color 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .contact-links a:hover { color: var(--accent); }
+
+  .dot {
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--accent);
+    flex-shrink: 0;
+  }
+
+  /* Divider */
+  .divider {
+    height: 1px;
+    background: linear-gradient(90deg, var(--accent) 0%, var(--border) 60%, transparent 100%);
+    margin: 32px 0;
+    position: relative;
+  }
+
+  /* Summary */
+  .summary {
+    background: linear-gradient(135deg, rgba(0,212,255,0.04), rgba(124,58,237,0.04));
+    border: 1px solid var(--border);
+    border-left: 2px solid var(--accent);
+    padding: 20px 24px;
+    border-radius: 0 6px 6px 0;
+    font-size: 15px;
+    color: var(--text);
+    animation: fadeUp 0.6s 0.1s ease both;
+  }
+
+  /* Sections */
+  section {
+    margin-bottom: 48px;
+    animation: fadeUp 0.6s ease both;
+  }
+
+  section:nth-child(2) { animation-delay: 0.15s; }
+  section:nth-child(3) { animation-delay: 0.2s; }
+  section:nth-child(4) { animation-delay: 0.25s; }
+  section:nth-child(5) { animation-delay: 0.3s; }
+  section:nth-child(6) { animation-delay: 0.35s; }
+
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+
+  .section-header h2 {
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--accent);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+  }
+
+  .section-header::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  /* Entry cards */
+  .entry {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 20px 24px;
+    margin-bottom: 12px;
+    position: relative;
+    overflow: hidden;
+    transition: border-color 0.2s, transform 0.2s;
+  }
+
+  .entry:hover {
+    border-color: rgba(0,212,255,0.3);
+    transform: translateX(3px);
+  }
+
+  .entry::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: var(--accent);
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+
+  .entry:hover::before { opacity: 1; }
+
+  .entry-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 16px;
+    margin-bottom: 4px;
+    flex-wrap: wrap;
+  }
+
+  .entry-title {
+    font-family: var(--sans);
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text-bright);
+  }
+
+  .entry-meta {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--accent);
+    white-space: nowrap;
+    padding-top: 2px;
+  }
+
+  .entry-sub {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--text-dim);
+    margin-bottom: 12px;
+  }
+
+  .entry ul {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .entry ul li {
+    font-size: 14px;
+    color: var(--text);
+    padding-left: 16px;
+    position: relative;
+    line-height: 1.5;
+  }
+
+  .entry ul li::before {
+    content: '›';
+    position: absolute;
+    left: 0;
+    color: var(--accent);
+    font-weight: 700;
+  }
+
+  /* Skills grid */
+  .skills-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+
+  .skill-block {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 16px 20px;
+    transition: border-color 0.2s;
+  }
+
+  .skill-block:hover { border-color: rgba(0,212,255,0.3); }
+
+  .skill-block-label {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--accent);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+
+  .skill-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .tag {
+    background: rgba(0,212,255,0.07);
+    border: 1px solid rgba(0,212,255,0.15);
+    color: var(--text);
+    font-family: var(--mono);
+    font-size: 11px;
+    padding: 3px 9px;
+    border-radius: 3px;
+    transition: background 0.2s, color 0.2s;
+  }
+
+  .tag:hover {
+    background: rgba(0,212,255,0.15);
+    color: var(--accent);
+  }
+
+  /* Education */
+  .edu-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 20px 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 16px;
+    flex-wrap: wrap;
+    transition: border-color 0.2s;
+  }
+
+  .edu-card:hover { border-color: rgba(0,212,255,0.3); }
+
+  .edu-degree {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text-bright);
+    margin-bottom: 4px;
+  }
+
+  .edu-school {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--text-dim);
+    margin-bottom: 10px;
+  }
+
+  .edu-right {
+    text-align: right;
+  }
+
+  .gpa-badge {
+    font-family: var(--mono);
+    font-size: 11px;
+    background: rgba(63,185,80,0.1);
+    border: 1px solid rgba(63,185,80,0.3);
+    color: var(--green);
+    padding: 4px 10px;
+    border-radius: 4px;
+    margin-bottom: 6px;
+    display: inline-block;
+  }
+
+  .courses {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text-dim);
+    margin-top: 10px;
+    line-height: 1.7;
+  }
+
+  /* Projects */
+  .projects-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+
+  .project-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 18px 20px;
+    transition: border-color 0.2s, transform 0.2s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .project-card::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+
+  .project-card:hover {
+    border-color: rgba(0,212,255,0.25);
+    transform: translateY(-2px);
+  }
+
+  .project-card:hover::after { opacity: 1; }
+
+  .project-name {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-bright);
+    margin-bottom: 4px;
+  }
+
+  .project-context {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--accent2);
+    letter-spacing: 0.08em;
+    margin-bottom: 10px;
+  }
+
+  .project-desc {
+    font-size: 13px;
+    color: var(--text-dim);
+    line-height: 1.55;
+  }
+
+  /* Footer */
+  footer {
+    margin-top: 64px;
+    padding-top: 24px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: gap;
+  }
+
+  .footer-left {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text-dim);
+  }
+
+  .status {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--green);
+  }
+
+  .pulse {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--green);
+    animation: pulse 2s infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.4; transform: scale(0.85); }
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .download-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--accent);
+    border: 1px solid rgba(0,212,255,0.35);
+    background: rgba(0,212,255,0.06);
+    padding: 8px 16px;
+    border-radius: 4px;
+    text-decoration: none;
+    transition: background 0.2s, border-color 0.2s, transform 0.15s;
+    cursor: pointer;
+  }
+
+  .download-btn:hover {
+    background: rgba(0,212,255,0.14);
+    border-color: var(--accent);
+    transform: translateY(-1px);
+  }
+
+  .download-btn svg {
+    width: 13px;
+    height: 13px;
+    stroke: var(--accent);
+    fill: none;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    flex-shrink: 0;
+  }
+
+  @media (max-width: 600px) {
+    .projects-grid, .skills-grid { grid-template-columns: 1fr; }
+    .contact-links { align-items: flex-start; }
+    .header-top { flex-direction: column; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <!-- HEADER -->
+  <header>
+    <div class="header-top">
+      <div class="name-block">
+        <div class="label">// portfolio resume</div>
+        <h1>Charles <span>Pratt</span></h1>
+        <p class="tagline">software engineer · AI systems · robotics</p>
+      </div>
+      <div class="contact-links">
+        <a href="mailto:c.ben.pratt@gmail.com"><span class="dot"></span>c.ben.pratt@gmail.com</a>
+        <a href="tel:8502923633"><span class="dot"></span>(850) 292-3633</a>
+        <a href="https://eaozone.github.io/"><span class="dot"></span>Portfolio</a>
+        <a href="https://github.com/EAOZONE"><span class="dot"></span>GitHub</a>
+        <a href="https://www.linkedin.com/in/charles-pratt-919313291/"><span class="dot"></span>LinkedIn</a>
+      </div>
+    </div>
+    <div class="divider"></div>
+    <div class="summary">
+      Research-oriented software engineer and CS student with end-to-end experience building and deploying AI systems — from data collection and model training through real-world execution. Experienced integrating large language models, reinforcement learning-adjacent policies, and autonomous pipelines in fast-paced research environments. Proven ability to own ambiguous projects independently and collaborate closely with researchers to turn ideas into working systems.
+    </div>
+  </header>
+
+  <!-- EDUCATION -->
+  <section>
+    <div class="section-header"><h2>Education</h2></div>
+    <div class="edu-card">
+      <div>
+        <div class="edu-degree">B.S. Computer Science</div>
+        <div class="edu-school">University of Florida · Gainesville, FL · Aug 2023 – May 2027</div>
+        <div class="edu-school">Minor in Digital Arts and Sciences</div>
+        <div class="courses">Machine Learning (Grad) · Natural Language Processing · Algorithm Abstraction & Design<br>Autonomous Robots · Competitive Programming · Operating Systems · Info & Database Systems</div>
+      </div>
+      <div class="edu-right">
+        <div class="gpa-badge">GPA 3.85</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SKILLS -->
+  <section>
+    <div class="section-header"><h2>Technical Skills</h2></div>
+    <div class="skills-grid">
+      <div class="skill-block">
+        <div class="skill-block-label">Languages & Tools</div>
+        <div class="skill-tags">
+          <span class="tag">Python</span>
+          <span class="tag">C++</span>
+          <span class="tag">Java</span>
+          <span class="tag">PyTorch</span>
+          <span class="tag">ROS2</span>
+          <span class="tag">OpenCV</span>
+          <span class="tag">SQL</span>
+          <span class="tag">React</span>
+          <span class="tag">Git</span>
+          <span class="tag">Linux</span>
+          <span class="tag">CI/CD</span>
+        </div>
+      </div>
+      <div class="skill-block">
+        <div class="skill-block-label">AI & Research</div>
+        <div class="skill-tags">
+          <span class="tag">LLMs</span>
+          <span class="tag">Reinforcement Learning</span>
+          <span class="tag">Diffusion Policies</span>
+          <span class="tag">Imitation Learning</span>
+          <span class="tag">RLHF</span>
+          <span class="tag">Model Training</span>
+          <span class="tag">Real-Time Inference</span>
+          <span class="tag">Experiment Design</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- EXPERIENCE -->
+  <section>
+    <div class="section-header"><h2>Research Experience</h2></div>
+
+    <div class="entry">
+      <div class="entry-header">
+        <div class="entry-title">AI Research Engineering Intern</div>
+        <div class="entry-meta">May – Aug 2025</div>
+      </div>
+      <div class="entry-sub">Institute for Human and Machine Cognition · Pensacola, FL</div>
+      <ul>
+        <li>Owned end-to-end development of an autonomous AI pipeline for the Unitree H1-2 humanoid — from VR-based teleoperation data collection through diffusion policy training and live deployment on physical hardware.</li>
+        <li>Integrated LLM-based planning to translate natural language task commands into structured execution goals, bridging high-level reasoning with low-level robot control.</li>
+        <li>Bridged Python-based AI frameworks (Lerobot) with Java control systems via ROS2, enabling cross-language research workflows and rapid iteration on learned policies.</li>
+      </ul>
+    </div>
+
+    <div class="entry">
+      <div class="entry-header">
+        <div class="entry-title">Research Engineering Intern</div>
+        <div class="entry-meta">May – Aug 2024</div>
+      </div>
+      <div class="entry-sub">Institute for Human and Machine Cognition · Pensacola, FL</div>
+      <ul>
+        <li>Built sub-100ms motion capture pipelines processing synchronized multi-sensor streams to drive real-time control of three robotic platforms: Psyonic Ability Hands, Franka Arms, and humanoid Nadia.</li>
+        <li>Developed evaluation and visualization tools that enabled researchers to rapidly interpret system behavior and iterate on experiments during live trials.</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- LEADERSHIP -->
+  <section>
+    <div class="section-header"><h2>Leadership</h2></div>
+    <div class="entry">
+      <div class="entry-header">
+        <div class="entry-title">Design Team Captain</div>
+        <div class="entry-meta">Aug 2024 – Present</div>
+      </div>
+      <div class="entry-sub">Gator Theme Park Engineering & Design · Gainesville, FL</div>
+      <ul>
+        <li>Independently scoped and led development of an animatronic control system — designing architecture, coordinating cross-functional subteams, and delivering a working system end-to-end.</li>
+        <li>Drove agile workflows across mechanical, electrical, and software teams; built and shipped iteratively under tight timelines with real deployment constraints.</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- PROJECTS -->
+  <section>
+    <div class="section-header"><h2>Projects</h2></div>
+    <div class="projects-grid">
+
+      <div class="project-card">
+        <div class="project-name">Ride Design Vehicle</div>
+        <div class="project-context">Gator TPED</div>
+        <div class="project-desc">Designed and fabricated a 4-DOF motion base vehicle prototype for immersive attractions, featuring integrated pitch, roll, and yaw control with real-time motion-to-media synchronization.</div>
+      </div>
+
+      <div class="project-card">
+        <div class="project-name">Learning-Based Robotic Manipulation</div>
+        <div class="project-context">Autonomous Robotics Course</div>
+        <div class="project-desc">Modular autonomous agent pipeline with an LLM planning node that parses natural language into structured goals, a visuomotor policy for physical execution, and ROS2-based infrastructure. Ran full experimental cycle: teleoperation data collection → imitation learning → policy evaluation → hardware deployment.</div>
+      </div>
+
+      <div class="project-card">
+        <div class="project-name">Animatronic Gator Head</div>
+        <div class="project-context">Gator TPED</div>
+        <div class="project-desc">Cross-platform control pipeline (Unity → Python → embedded) with FFT-based audio-reactive behaviors and CSV-driven sim-to-real animation deployment.</div>
+      </div>
+
+      <div class="project-card">
+        <div class="project-name">Movie Graph Visualizer</div>
+        <div class="project-context">Data Structures & Algorithms</div>
+        <div class="project-desc">BFS and Dijkstra pathfinding over a 45,000-node movie-actor graph with an interactive HTML/JS visualization to explore shortest-path connections between films.</div>
+      </div>
+
+      <div class="project-card">
+        <div class="project-name">Jar of Joy</div>
+        <div class="project-context">Software Engineering Course</div>
+        <div class="project-desc">Full-stack web app with Python/MySQL backend and React/JS frontend, implementing user authentication and a dynamic database-driven experience.</div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-left">charles pratt · updated 2026</div>
+    <a class="download-btn" href="media/charles_pratt_resume.pdf" download="Charles_Pratt_Resume.pdf">
+      <svg viewBox="0 0 24 24"><path d="M12 3v13M7 11l5 5 5-5M5 20h14"/></svg>
+      download résumé
+    </a>
+    <div class="status"><div class="pulse"></div>open to opportunities</div>
+  </footer>
+
+</div>
+</body>
+</html>
