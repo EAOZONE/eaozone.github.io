@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="I trained SmolVLA on 200 demonstrations for language-guided block placement and built a ROS2 pipeline to run it on an SO-101 arm." />
+  <title>Learning-Based Robotic Manipulation — Ben Pratt</title>
+  <link rel="stylesheet" href="../css/style.css" />
+  <link rel="stylesheet" href="../css/project.css" />
+  <script src="../js/project.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <div class="grid-bg"></div>
+  <nav aria-label="Main navigation">
+    <div class="nav-logo">ben_pratt</div>
+    <ul class="nav-links">
+      <li><a href="../index.html">About</a></li>
+      <li><a href="../resume.html">Resume</a></li>
+      <li><a href="../projects.html" class="active" aria-current="true">Projects</a></li>
+      <li><a href="../contact.html">Contact</a></li>
+    </ul>
+  </nav>
+  <main id="main" tabindex="-1" data-project="uf-manipulation">
+    <article class="project-page">
+      <a class="back-link" data-back-to-projects href="../projects.html#uf-manipulation">← Back to projects</a>
+      <header class="project-header">
+        <div class="project-intro">
+          <p class="project-meta">Robotics · UF 2025</p>
+          <h1>Learning-Based Robotic Manipulation</h1>
+          <p class="project-summary">I trained SmolVLA to pick a requested colored block and place it at the center of a coaster, then built the ROS2 pipeline to run it on an SO-101 arm.</p>
+        </div>
+        <figure class="project-visual"><button class="image-trigger" type="button" aria-label="Enlarge Learning-Based Robotic Manipulation image"><img class="project-image" src="../media/Robotic_Arm.jpg" alt="Robotic Arm Manipulation" style="object-position:center top;" /><span class="image-hint" aria-hidden="true">View full image ↗</span></button></figure>
+      </header>
+      <div class="project-layout">
+        <div class="project-content">
+          <section class="project-media" aria-labelledby="demonstrations"><h2 class="project-section-title" id="demonstrations">Demonstrations</h2><figure class="video-panel" id="video-robotic-arm">
+              <video controls playsinline preload="metadata" aria-labelledby="caption-robotic-arm"><source src="../media/Robotic_arm.mp4" type="video/mp4"><a href="../media/Robotic_arm.mp4">Open video</a></video>
+              <figcaption id="caption-robotic-arm">Robotic Arm Demo</figcaption>
+            </figure></section>
+          <h2 class="project-section-title" id="project-details">Project details</h2>
+          <ul class="contribution-list">
+            <li>I collected <strong>200 demonstrations total</strong> across red, blue, and purple blocks using the SO-101 leader–follower system and trained a SmolVLA vision-language-action policy with LeRobot.</li>
+            <li>I wrote ROS2 nodes to collect camera images and the LLM’s task instruction, send them to the trained policy, and execute the returned actions on the arm.</li>
+            <li>The task language specified which colored block to pick up and place at the center of a coaster.</li>
+            <li>On hardware, the arm could select between red and blue blocks. Target selection became less reliable when purple blocks were included.</li>
+          </ul>
+          <h2 class="project-section-title" id="system-architecture">System architecture</h2>
+          <p class="project-copy">For the UF Autonomous Robots course, I connected a user’s language request to physical block placement. LeRobot handled demonstration collection and SmolVLA training. I built the ROS2 deployment nodes that passed camera images and task language to the trained policy and used its predicted actions to move the follower arm.</p>
+          <figure class="architecture-figure">
+            <div class="diagram-toolbar"><span>System diagram<span class="diagram-scroll-hint"> · scroll to explore</span></span><a class="diagram-open" href="../media/architecture/uf-manipulation.svg" target="_blank" rel="noopener noreferrer">Open full size ↗</a></div>
+            <div class="diagram-scroll" tabindex="0" role="region" aria-label="Scrollable architecture diagram">
+              <button class="image-trigger architecture-trigger" type="button" aria-label="Enlarge SO-101, SmolVLA and ROS2 block-placement architecture">
+                <img src="../media/architecture/uf-manipulation.svg" alt="LeRobot trains SmolVLA from 200 SO-101 demonstrations. ROS2 sends LLM task language and camera images to the policy, then executes its actions on the follower arm." width="1000" height="1020" loading="lazy" />
+              </button>
+            </div>
+            <figcaption><span>LeRobot supplied data collection and training. My ROS2 nodes connected language, vision, policy inference, and physical arm control during deployment.</span></figcaption>
+          </figure>
+
+          <h2 class="project-section-title" id="task-planning">Language selects the target</h2>
+          <p class="project-copy">A user could request a red, blue, or purple block. The LLM produced the task instruction that was passed to SmolVLA alongside the camera images. That language input told the policy which block the user wanted.</p>
+          <p class="project-copy">The visual setting and required movement were similar across the tasks: select a block, pick it up, and place it at the coaster’s center. The instruction distinguished the requested color, while the VLA policy predicted the robot actions.</p>
+
+          <h2 class="project-section-title" id="demonstration-training">Collecting and using demonstrations</h2>
+          <p class="project-copy">I used the SO-101 leader–follower system to demonstrate the pick-and-place motion, collecting synchronized camera observations and robot actions with LeRobot. The dataset contained 200 demonstrations in total across the three block colors. I used those demonstrations to train SmolVLA for the placement task.</p>
+          <p class="project-copy">During deployment, my ROS2 nodes collected the images and LLM output, sent those inputs to the trained VLA policy, and took the returned actions through to arm execution.</p>
+
+          <h2 class="project-section-title" id="hardware-results">Hardware results and limitations</h2>
+          <p class="project-copy">When the scene contained only red and blue blocks, the arm could distinguish between them and pick up the requested color. When purple blocks were included, selecting the requested block became harder. This remained an unresolved limitation of the project.</p>
+          <p class="project-copy">A next experiment would be to train an object detector, such as YOLO, to distinguish the block colors and test whether explicit detections improve target selection. I did not implement or evaluate that extension.</p>
+        </div>
+        <aside class="project-contents" aria-label="On this page">
+          <p class="section-label">On this page</p>
+          <a href="#demonstrations">Demonstrations</a>
+          <a href="#project-details">Project details</a>
+          <a href="#system-architecture">System architecture</a>
+          <a href="#task-planning">Language selects the target</a>
+          <a href="#demonstration-training">Collecting and using demonstrations</a>
+          <a href="#hardware-results">Hardware results and limitations</a>
+        </aside>
+      </div>
+      <div class="project-end"><a class="btn" data-back-to-projects href="../projects.html#uf-manipulation">← Explore more projects</a></div>
+    </article>
+    <footer>
+      <span>© 2026 Ben Pratt</span>
+      <div class="footer-links">
+        <a href="mailto:c.ben.pratt@gmail.com">c.ben.pratt@gmail.com</a>
+        <a href="https://github.com/EAOZONE" target="_blank" rel="noopener noreferrer">GitHub</a>
+        <a href="https://www.linkedin.com/in/charles-pratt-919313291/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+      </div>
+    </footer>
+  </main>
+  <dialog class="lightbox" id="lightbox" aria-label="Project image">
+    <button type="button" class="lightbox-close">&#10005; close</button>
+    <img id="lightboxImg" alt="" />
+  </dialog>
+</body>
+</html>

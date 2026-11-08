@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="I wrote the MQTT communication and sensor-sequencing code for a team-built dark ride prototype with a vehicle suspended beneath the track." />
+  <title>Ride Design Vehicle — Ben Pratt</title>
+  <link rel="stylesheet" href="../css/style.css" />
+  <link rel="stylesheet" href="../css/project.css" />
+  <script src="../js/project.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <div class="grid-bg"></div>
+  <nav aria-label="Main navigation">
+    <div class="nav-logo">ben_pratt</div>
+    <ul class="nav-links">
+      <li><a href="../index.html">About</a></li>
+      <li><a href="../resume.html">Resume</a></li>
+      <li><a href="../projects.html" class="active" aria-current="true">Projects</a></li>
+      <li><a href="../contact.html">Contact</a></li>
+    </ul>
+  </nav>
+  <main id="main" tabindex="-1" data-project="ride-design-vehicle">
+    <article class="project-page">
+      <a class="back-link" data-back-to-projects href="../projects.html#ride-design-vehicle">← Back to projects</a>
+      <header class="project-header">
+        <div class="project-intro">
+          <p class="project-meta">Engineering · TPED 2026</p>
+          <h1>Ride Design Vehicle</h1>
+          <p class="project-summary">I wrote the MQTT communication and sensor-sequencing code for a team-built dark ride prototype with a vehicle suspended beneath the track.</p>
+        </div>
+        <figure class="project-visual"><button class="image-trigger" type="button" aria-label="Enlarge Ride Design Vehicle image"><img class="project-image" src="../media/Full Assembly Picture.jpg" alt="Ride Design Vehicle" style="object-position:center;" /><span class="image-hint" aria-hidden="true">View full image ↗</span></button></figure>
+      </header>
+      <div class="project-layout">
+        <div class="project-content">
+          <section class="project-media" aria-labelledby="demonstrations"><h2 class="project-section-title" id="demonstrations">Demonstrations</h2><div class="video-options" role="group" aria-label="Choose a demonstration"><button type="button" class="video-choice" data-video="video-ride-demo" aria-controls="video-ride-demo" aria-pressed="true">Ride prototype in motion</button>
+<button type="button" class="video-choice" data-video="video-ride-yaw" aria-controls="video-ride-yaw" aria-pressed="false">Yaw Control</button>
+<button type="button" class="video-choice" data-video="video-ride-drop" aria-controls="video-ride-drop" aria-pressed="false">Drop Track</button></div><figure class="video-panel" id="video-ride-demo">
+              <video controls playsinline preload="metadata" aria-labelledby="caption-ride-demo"><source src="../media/Demonstration.mov"><a href="../media/Demonstration.mov">Open video</a></video>
+              <figcaption id="caption-ride-demo">Ride prototype in motion</figcaption>
+            </figure>
+<figure class="video-panel" id="video-ride-yaw">
+              <video controls playsinline preload="metadata" aria-labelledby="caption-ride-yaw"><source src="../media/Ride Vehicle Yaw.mov"><a href="../media/Ride Vehicle Yaw.mov">Open video</a></video>
+              <figcaption id="caption-ride-yaw">Yaw Control</figcaption>
+            </figure>
+<figure class="video-panel" id="video-ride-drop">
+              <video controls playsinline preload="metadata" aria-labelledby="caption-ride-drop"><source src="../media/Drop Track.mp4" type="video/mp4"><a href="../media/Drop Track.mp4">Open video</a></video>
+              <figcaption id="caption-ride-drop">Drop Track</figcaption>
+            </figure></section>
+          <h2 class="project-section-title" id="project-details">Project details</h2>
+<ul class="contribution-list">
+            <li>Our TPED team built an inverted dark ride prototype with a vehicle suspended beneath the track. I worked on its software and electrical integration.</li>
+            <li>I wrote the WiFi communication layer using Mosquitto MQTT to coordinate the vehicle, track systems, and central server.</li>
+            <li>I wrote the sensor-sequencing code, using IR beam-break sensors for trigger detection. I helped with track actuation, which another student led, including switch tracks, turntables, and the motorized drop track.</li>
+            <li>The system supported manual and autonomous subsystem control. As a captain, I suggested subsystem meetings and helped introduce full-group design reviews every fourth meeting; one review surfaced a vehicle-size issue affecting turns.</li>
+          </ul>
+          <h2 class="project-section-title" id="system-architecture">System architecture</h2>
+          <p class="project-copy">Our team built an inverted dark ride prototype with a vehicle suspended below the track. Vehicle motion, track mechanisms, and sensors had to work together. I wrote the MQTT communication and sensor-sequencing code and worked on the software/electrical integration.</p><figure class="architecture-figure">
+            <div class="diagram-toolbar"><span>System diagram<span class="diagram-scroll-hint"> · scroll to explore</span></span><a class="diagram-open" href="../media/architecture/ride-design-vehicle.svg" target="_blank" rel="noopener noreferrer">Open full size ↗</a></div>
+            <div class="diagram-scroll" tabindex="0" role="region" aria-label="Scrollable architecture diagram">
+              <button class="image-trigger architecture-trigger" type="button" aria-label="Enlarge Ride sensor, MQTT, vehicle and track-control architecture">
+                <img src="../media/architecture/ride-design-vehicle.svg" alt="Ride sensor, MQTT, vehicle and track-control architecture" width="1000" height="800" loading="lazy" />
+              </button>
+            </div>
+            <figcaption><span>MQTT connects the distributed controllers. Track-actuation implementation was led by another student, with my support.</span></figcaption>
+          </figure>
+
+          <h2 class="project-section-title" id="communication">Communication between subsystems</h2>
+          <p class="project-copy">The vehicle and track systems exchange messages through an MQTT broker. Sensor events, vehicle commands, and track commands have separate roles in that communication. The central Python controller uses those events to coordinate the ride sequence, while operator controls support manual and automatic operation.</p><p class="project-copy">This structure lets each subsystem handle its local hardware while the ride logic coordinates their behavior. My work covered the communication layer that connected those parts and the code that interpreted the sensor sequence.</p>
+
+          <h2 class="project-section-title" id="sensor-sequencing">Turning sensor events into ride actions</h2>
+          <p class="project-copy">IR beam-break sensors identify discrete trigger points along the track. The sequencing code uses those events to select the next action, such as changing vehicle motion or requesting a switch, turntable, or drop-track operation. The videos show the physical prototype, vehicle yaw, and drop-track operation.</p>
+
+          <h2 class="project-section-title" id="integration-reviews">Integrating the team’s work</h2>
+          <p class="project-copy">I supported the track-actuation work, which another student led. As a captain, I suggested subsystem meetings and helped introduce full-group design reviews every fourth meeting. One review surfaced a vehicle-size issue affecting turns. Those reviews gave the team a place to discuss interactions between mechanical dimensions, electrical integration, and software sequencing.</p>
+          <div class="card-links"><a href="https://github.com/EAOZONE/RideDesign" target="_blank" rel="noopener noreferrer" class="btn">View Code</a><span class="btn btn-ghost" style="cursor:default;">UF Theme Park Engineering</span></div>
+        </div>
+        <aside class="project-contents" aria-label="On this page">
+          <p class="section-label">On this page</p>
+          <a href="#demonstrations">Demonstrations</a>
+          <a href="#project-details">Project details</a>
+          <a href="#system-architecture">System architecture</a>
+          <a href="#communication">Communication between subsystems</a>
+          <a href="#sensor-sequencing">Turning sensor events into ride actions</a>
+          <a href="#integration-reviews">Integrating the team’s work</a>
+        </aside>
+      </div>
+      <div class="project-end"><a class="btn" data-back-to-projects href="../projects.html#ride-design-vehicle">← Explore more projects</a></div>
+    </article>
+    <footer>
+      <span>© 2026 Ben Pratt</span>
+      <div class="footer-links">
+        <a href="mailto:c.ben.pratt@gmail.com">c.ben.pratt@gmail.com</a>
+        <a href="https://github.com/EAOZONE" target="_blank" rel="noopener noreferrer">GitHub</a>
+        <a href="https://www.linkedin.com/in/charles-pratt-919313291/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+      </div>
+    </footer>
+  </main>
+  <dialog class="lightbox" id="lightbox" aria-label="Project image">
+    <button type="button" class="lightbox-close">&#10005; close</button>
+    <img id="lightboxImg" alt="" />
+  </dialog>
+</body>
+</html>

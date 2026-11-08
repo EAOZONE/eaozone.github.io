@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="I investigated rewards and terrain observations for humanoid walking on stairs, slopes, and uneven ground." />
+  <title>Perceptive Locomotion — Ben Pratt</title>
+  <link rel="stylesheet" href="../css/style.css" />
+  <link rel="stylesheet" href="../css/project.css" />
+  <script src="../js/project.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <div class="grid-bg"></div>
+  <nav aria-label="Main navigation">
+    <div class="nav-logo">ben_pratt</div>
+    <ul class="nav-links">
+      <li><a href="../index.html">About</a></li>
+      <li><a href="../resume.html">Resume</a></li>
+      <li><a href="../projects.html" class="active" aria-current="true">Projects</a></li>
+      <li><a href="../contact.html">Contact</a></li>
+    </ul>
+  </nav>
+  <main id="main" tabindex="-1" data-project="perceptive-locomotion">
+    <article class="project-page">
+      <a class="back-link" data-back-to-projects href="../projects.html#perceptive-locomotion">← Back to projects</a>
+      <header class="project-header">
+        <div class="project-intro">
+          <p class="project-meta">Research · Persona AI · Aug 2026–present</p>
+          <h1>Perceptive Locomotion</h1>
+          <p class="project-summary">I investigated rewards and terrain observations for humanoid walking on stairs, slopes, and uneven ground.</p>
+        </div>
+        <figure class="project-visual"><img class="project-image brand-logo" src="../media/persona-ai-logo.webp" alt="Persona AI" width="768" height="174" /></figure>
+      </header>
+      <div class="project-layout">
+        <div class="project-content">
+
+          <h2 class="project-section-title" id="reward-design-foot-placement">Reward design &amp; foot placement</h2>
+          <ul class="contribution-list">
+            <li>I adapted foot-placement rewards in an existing humanoid walking environment, comparing penalties based on the largest terrain measurement with ones that combined measurements across the foot.</li>
+            <li>Course completion improved from <strong>80% to 95%</strong> on unfamiliar terrain over 1,000 simulation episodes per policy, with somewhat slower walking.</li>
+            <li>The policy I trained was tested on hardware, where it successfully guided a humanoid up and down a full flight of stairs.</li>
+          </ul>
+          <h2 class="project-section-title" id="perception-policy-training">Perception &amp; policy training</h2>
+          <ul class="contribution-list">
+            <li>I compared two complete approaches: a height-map MLP with actor–critic training and a noise curriculum, and a depth-image CNN trained from a teacher with an ideal height map.</li>
+            <li>In a separate evaluation of 100 simulation episodes per policy, success was <strong>90% for the height-map approach</strong> and <strong>95% for depth</strong>. Success required reaching the destination at an average speed of at least 0.54 m/s. Neither policy fell; unsuccessful trials were too slow.</li>
+            <li>I traced the loss of grated-stair detail to depth-image resizing by comparing recorded sensor footage with policy inputs.</li>
+            <li>I evaluated an additional LiDAR/depth policy in simulation. It improved grated-stair ascent and descent but performed worse on ordinary stairs.</li>
+          </ul>
+          <div class="card-links"><a class="btn btn-ghost" href="https://persona.ai/" target="_blank" rel="noopener noreferrer">Persona AI</a></div>
+        </div>
+        <aside class="project-contents" aria-label="On this page">
+          <p class="section-label">On this page</p>
+          <a href="#reward-design-foot-placement">Reward design &amp; foot placement</a>
+          <a href="#perception-policy-training">Perception &amp; policy training</a>
+        </aside>
+      </div>
+      <div class="project-end"><a class="btn" data-back-to-projects href="../projects.html#perceptive-locomotion">← Explore more projects</a></div>
+    </article>
+    <footer>
+      <span>© 2026 Ben Pratt</span>
+      <div class="footer-links">
+        <a href="mailto:c.ben.pratt@gmail.com">c.ben.pratt@gmail.com</a>
+        <a href="https://github.com/EAOZONE" target="_blank" rel="noopener noreferrer">GitHub</a>
+        <a href="https://www.linkedin.com/in/charles-pratt-919313291/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+      </div>
+    </footer>
+  </main>
+  <dialog class="lightbox" id="lightbox" aria-label="Project image">
+    <button type="button" class="lightbox-close">&#10005; close</button>
+    <img id="lightboxImg" alt="" />
+  </dialog>
+</body>
+</html>

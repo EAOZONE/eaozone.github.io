@@ -66,7 +66,10 @@
     .contact-item-value {
       font-size: .875rem;
       color: var(--text);
+      overflow-wrap: anywhere;
     }
+    .contact-item > div:last-child { min-width: 0; }
+    .contact-info, .contact-form { min-width: 0; }
     .contact-item-value a { color: var(--text); }
     .contact-item-value a:hover { color: var(--accent); }
 
@@ -164,23 +167,25 @@
     @media (max-width: 768px) {
       .contact-wrapper { grid-template-columns: 1fr; gap: 2.5rem; }
       .form-row { grid-template-columns: 1fr; }
+      .contact-form { padding: 1.25rem; }
     }
   </style>
 </head>
 <body>
+  <a class="skip-link" href="#main">Skip to content</a>
   <div class="grid-bg"></div>
 
-  <nav>
+  <nav aria-label="Main navigation">
     <div class="nav-logo">ben_pratt</div>
     <ul class="nav-links">
       <li><a href="index.html">About</a></li>
       <li><a href="resume.html">Resume</a></li>
       <li><a href="projects.html">Projects</a></li>
-      <li><a href="contact.html" class="active">Contact</a></li>
+      <li><a href="contact.html" class="active" aria-current="page">Contact</a></li>
     </ul>
   </nav>
 
-  <main>
+  <main id="main" tabindex="-1">
     <div class="contact-wrapper">
 
       <!-- LEFT: info -->
@@ -213,7 +218,7 @@
             <div>
               <div class="contact-item-label">GitHub</div>
               <div class="contact-item-value">
-                <a href="https://github.com/EAOZONE" target="_blank">github.com/EAOZONE</a>
+                <a href="https://github.com/EAOZONE" target="_blank" rel="noopener noreferrer">github.com/EAOZONE</a>
               </div>
             </div>
           </div>
@@ -222,7 +227,7 @@
             <div>
               <div class="contact-item-label">LinkedIn</div>
               <div class="contact-item-value">
-                <a href="https://www.linkedin.com/in/charles-pratt-919313291/" target="_blank">charles-pratt-919313291</a>
+                <a href="https://www.linkedin.com/in/charles-pratt-919313291/" target="_blank" rel="noopener noreferrer">Ben Pratt</a>
               </div>
             </div>
           </div>
@@ -231,22 +236,22 @@
 
       <!-- RIGHT: form -->
       <div class="contact-form fade-up fade-up-2">
-        <div class="form-title">// send_message.js</div>
+        <div class="form-title">// write a message</div>
 
-        <div id="formWrap">
+        <form id="formWrap">
           <div class="form-row">
             <div class="form-group">
               <label for="fname">First Name</label>
-              <input type="text" id="fname" placeholder="Jane" />
+              <input type="text" id="fname" autocomplete="given-name" placeholder="Jane" />
             </div>
             <div class="form-group">
               <label for="lname">Last Name</label>
-              <input type="text" id="lname" placeholder="Smith" />
+              <input type="text" id="lname" autocomplete="family-name" placeholder="Smith" />
             </div>
           </div>
           <div class="form-group">
             <label for="email">Email</label>
-            <input type="email" id="email" placeholder="jane@example.com" />
+            <input type="email" id="email" autocomplete="email" required placeholder="jane@example.com" />
           </div>
           <div class="form-group">
             <label for="subject">Subject</label>
@@ -254,49 +259,46 @@
           </div>
           <div class="form-group">
             <label for="message">Message</label>
-            <textarea id="message" placeholder="Tell me more..."></textarea>
+            <textarea id="message" required placeholder="Tell me more..."></textarea>
           </div>
-          <button class="form-submit" onclick="handleSubmit()">Send Message →</button>
-        </div>
+          <p style="color:var(--muted);font-size:.8rem;margin-bottom:1rem;">Opens a draft in your email app. Send it there when you're ready.</p>
+          <button class="form-submit" type="submit">Open Email Draft →</button>
+        </form>
 
-        <div class="form-success" id="successMsg">
-          <div class="icon">✓</div>
-          <h3 style="color:#fff;margin-bottom:.5rem;">Message sent!</h3>
-          <p>Thanks for reaching out. I'll get back to you soon.</p>
+        <div class="form-success" id="successMsg" role="status">
+          <p>Finish sending in your email app. If it didn't open, you can email <a href="mailto:c.ben.pratt@gmail.com">c.ben.pratt@gmail.com</a> directly. Your message is still here to copy.</p>
         </div>
       </div>
 
     </div>
 
     <footer>
-      <span>© 2025 Ben Pratt</span>
+      <span>© 2026 Ben Pratt</span>
       <div class="footer-links">
         <a href="mailto:c.ben.pratt@gmail.com">c.ben.pratt@gmail.com</a>
-        <a href="https://github.com/EAOZONE" target="_blank">GitHub</a>
-        <a href="https://www.linkedin.com/in/charles-pratt-919313291/" target="_blank">LinkedIn</a>
+        <a href="https://github.com/EAOZONE" target="_blank" rel="noopener noreferrer">GitHub</a>
+        <a href="https://www.linkedin.com/in/charles-pratt-919313291/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
       </div>
     </footer>
   </main>
 
   <script>
-    function handleSubmit() {
+    document.getElementById('formWrap').addEventListener('submit', event => {
+      event.preventDefault();
       const email = document.getElementById('email').value.trim();
       const message = document.getElementById('message').value.trim();
       if (!email || !message) {
         alert('Please fill in your email and message.');
         return;
       }
-      // In production you'd POST to a form service (Formspree, Netlify Forms, etc.)
-      // For now, open the user's mail client as a fallback
       const fname = document.getElementById('fname').value.trim();
       const lname = document.getElementById('lname').value.trim();
       const subject = encodeURIComponent(document.getElementById('subject').value.trim() || 'Portfolio Contact');
       const body = encodeURIComponent(`From: ${fname} ${lname} <${email}>\n\n${message}`);
       window.location.href = `mailto:c.ben.pratt@gmail.com?subject=${subject}&body=${body}`;
 
-      document.getElementById('formWrap').style.display = 'none';
       document.getElementById('successMsg').classList.add('visible');
-    }
+    });
   </script>
 </body>
 </html>

@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="I built a demonstration and training pipeline for humanoid lever turning, adapting existing teleoperation and inverse-kinematics software." />
+  <title>GR00T Manipulation — Ben Pratt</title>
+  <link rel="stylesheet" href="../css/style.css" />
+  <link rel="stylesheet" href="../css/project.css" />
+  <script src="../js/project.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <div class="grid-bg"></div>
+  <nav aria-label="Main navigation">
+    <div class="nav-logo">ben_pratt</div>
+    <ul class="nav-links">
+      <li><a href="../index.html">About</a></li>
+      <li><a href="../resume.html">Resume</a></li>
+      <li><a href="../projects.html" class="active" aria-current="true">Projects</a></li>
+      <li><a href="../contact.html">Contact</a></li>
+    </ul>
+  </nav>
+  <main id="main" tabindex="-1" data-project="groot-manipulation">
+    <article class="project-page">
+      <a class="back-link" data-back-to-projects href="../projects.html#groot-manipulation">← Back to projects</a>
+      <header class="project-header">
+        <div class="project-intro">
+          <p class="project-meta">Research · IHMC · May–Aug 2026</p>
+          <h1>GR00T Manipulation</h1>
+          <p class="project-summary">I built a demonstration and training pipeline for humanoid lever turning, adapting existing teleoperation and inverse-kinematics software.</p>
+        </div>
+        <figure class="project-visual"><button class="image-trigger" type="button" aria-label="Enlarge GR00T Manipulation image"><img class="project-image" src="../media/ihmc-alex.jpg" alt="IHMC’s Alex humanoid in a studio setup at the robotics lab" width="1024" height="768" style="object-position:center 45%;" /><span class="image-hint" aria-hidden="true">View full image ↗</span></button><figcaption class="project-note">Alex platform photo: <a href="https://www.ihmc.us/news20251119/" target="_blank" rel="noopener noreferrer">IHMC</a>. This photo shows the robot, not the lever-turning trial.</figcaption></figure>
+      </header>
+      <div class="project-layout">
+        <div class="project-content">
+
+          <h2 class="project-section-title" id="what-i-built-adapted">What I built &amp; adapted</h2>
+          <ul class="contribution-list">
+            <li>I extended an existing Isaac Lab environment with lever-turning assets and simulated cameras, integrating the existing teleoperation system for demonstration collection.</li>
+            <li>I wrote a Java converter for real-robot logs and integrated Isaac Teleop’s converter for simulated data. The training dataset contained approximately 20 real and 200 simulated demonstrations.</li>
+            <li>I adapted NVIDIA’s existing Unitree G1 inverse-kinematics code to convert the policy’s predicted wrist poses into arm motion on our robot. The policy used head-camera images and upper-body joint observations.</li>
+          </ul>
+          <h2 class="project-section-title" id="testing-results">Testing &amp; results</h2>
+          <ul class="contribution-list">
+            <li>I traced inconsistent arm motion across simulators, including MuJoCo, to a quaternion-convention mismatch. Correcting the action representation made the motion consistent.</li>
+            <li>The trained policy successfully turned the lever in <strong>95% of 1,000 simulation trials</strong> with randomized starting positions.</li>
+            <li>The policy was also tested on hardware and successfully turned the lever in <strong>one hardware trial</strong>.</li>
+          </ul>
+          <h2 class="project-section-title" id="system-architecture">System architecture</h2>
+          <p class="project-copy">The task was humanoid lever turning for IHMC’s shipboard-manipulation research. I started with an existing robot, teleoperation system, and basic Isaac Lab environment. My work connected demonstration collection, policy training, and robot control.</p><figure class="architecture-figure">
+            <div class="diagram-toolbar"><span>System diagram<span class="diagram-scroll-hint"> · scroll to explore</span></span><a class="diagram-open" href="../media/architecture/groot-manipulation.svg" target="_blank" rel="noopener noreferrer">Open full size ↗</a></div>
+            <div class="diagram-scroll" tabindex="0" role="region" aria-label="Scrollable architecture diagram">
+              <button class="image-trigger architecture-trigger" type="button" aria-label="Enlarge GR00T demonstration, training and arm-control architecture">
+                <img src="../media/architecture/groot-manipulation.svg" alt="GR00T demonstration, training and arm-control architecture" width="1000" height="880" loading="lazy" />
+              </button>
+            </div>
+            <figcaption><span>The left side builds the training data; the right side shows how the trained policy produces arm motion.</span></figcaption>
+          </figure>
+
+          <h2 class="project-section-title" id="demonstration-pipeline">Demonstration pipeline</h2>
+          <h3 class="project-subheading">Real and simulated data</h3><p class="project-copy">The real and simulated demonstrations began in different formats. I wrote a Java converter for real-robot logs and integrated Isaac Teleop’s converter for simulated data. The resulting dataset contained approximately 20 real and 200 simulated demonstrations.</p><p class="project-copy">In Isaac Lab, I built the lever-turning task assets and added cameras for demonstration collection. Integrating the existing teleoperation system let an operator demonstrate the task in that environment. GR00T was a practical fit for the NVIDIA simulation workflow we were already using.</p>
+
+          <h2 class="project-section-title" id="policy-control">From wrist poses to arm motion</h2>
+          <p class="project-copy">At runtime, the policy used images from the left and right head cameras together with upper-body joint observations. Its output described wrist poses. Those poses still had to be translated into arm motion on the robot.</p><p class="project-copy">I adapted NVIDIA’s inverse-kinematics implementation for the Unitree G1 to our robot. That integration connected the learned policy’s wrist targets to the robot’s arm-control path. The GR00T model, robot platform, and original inverse-kinematics implementation were existing components.</p>
+
+          <h2 class="project-section-title" id="action-consistency">Making actions consistent across simulators</h2>
+          <p class="project-copy">Identical actions initially produced different arm poses in different simulation environments. I compared the resulting motion, including in MuJoCo, and traced the discrepancy to a quaternion-convention mismatch.</p><p class="project-copy">Correcting the action representation made the motion consistent across those environments. This mattered before evaluating the learned behavior: a wrist target needed to represent the same pose wherever the policy was tested. The reported evaluation reached 95% success in simulation; hardware testing produced one successful lever-turning trial.</p>
+        </div>
+        <aside class="project-contents" aria-label="On this page">
+          <p class="section-label">On this page</p>
+          <a href="#what-i-built-adapted">What I built &amp; adapted</a>
+          <a href="#testing-results">Testing &amp; results</a>
+          <a href="#system-architecture">System architecture</a>
+          <a href="#demonstration-pipeline">Demonstration pipeline</a>
+          <a href="#policy-control">From wrist poses to arm motion</a>
+          <a href="#action-consistency">Making actions consistent across simulators</a>
+        </aside>
+      </div>
+      <div class="project-end"><a class="btn" data-back-to-projects href="../projects.html#groot-manipulation">← Explore more projects</a></div>
+    </article>
+    <footer>
+      <span>© 2026 Ben Pratt</span>
+      <div class="footer-links">
+        <a href="mailto:c.ben.pratt@gmail.com">c.ben.pratt@gmail.com</a>
+        <a href="https://github.com/EAOZONE" target="_blank" rel="noopener noreferrer">GitHub</a>
+        <a href="https://www.linkedin.com/in/charles-pratt-919313291/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+      </div>
+    </footer>
+  </main>
+  <dialog class="lightbox" id="lightbox" aria-label="Project image">
+    <button type="button" class="lightbox-close">&#10005; close</button>
+    <img id="lightboxImg" alt="" />
+  </dialog>
+</body>
+</html>

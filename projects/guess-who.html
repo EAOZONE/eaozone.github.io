@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Open-source robotic arm controlled by a Raspberry Pi to play the board game Guess Who using Python." />
+  <title>Guess Who Robot — Ben Pratt</title>
+  <link rel="stylesheet" href="../css/style.css" />
+  <link rel="stylesheet" href="../css/project.css" />
+  <script src="../js/project.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <div class="grid-bg"></div>
+  <nav aria-label="Main navigation">
+    <div class="nav-logo">ben_pratt</div>
+    <ul class="nav-links">
+      <li><a href="../index.html">About</a></li>
+      <li><a href="../resume.html">Resume</a></li>
+      <li><a href="../projects.html" class="active" aria-current="true">Projects</a></li>
+      <li><a href="../contact.html">Contact</a></li>
+    </ul>
+  </nav>
+  <main id="main" tabindex="-1" data-project="guess-who">
+    <article class="project-page">
+      <a class="back-link" data-back-to-projects href="../projects.html#guess-who">← Back to projects</a>
+      <header class="project-header">
+        <div class="project-intro">
+          <p class="project-meta">Robotics · Science Fair 2019–2020</p>
+          <h1>Guess Who Robot</h1>
+          <p class="project-summary">Open-source robotic arm controlled by a Raspberry Pi to play the board game Guess Who using Python.</p>
+        </div>
+        <figure class="project-visual"><button class="image-trigger" type="button" aria-label="Enlarge Guess Who Robot image"><img class="project-image" src="../media/IMG_20200203_174949399.jpg" alt="Guess Who Robot" /><span class="image-hint" aria-hidden="true">View full image ↗</span></button></figure>
+      </header>
+      <div class="project-layout">
+        <div class="project-content">
+          <section class="project-media" aria-labelledby="demonstrations"><h2 class="project-section-title" id="demonstrations">Demonstrations</h2><figure class="video-panel" id="video-gw-vid">
+              <video controls playsinline preload="metadata" aria-labelledby="caption-gw-vid"><source src="../media/13_VID_20200105_104829571.mp4" type="video/mp4"><a href="../media/13_VID_20200105_104829571.mp4">Open video</a></video>
+              <figcaption id="caption-gw-vid">Guess Who Demo</figcaption>
+            </figure></section>
+          <h2 class="project-section-title" id="project-details">Project details</h2>
+<ul class="contribution-list">
+            <li>Programmed a Raspberry Pi in Python to run game logic for Guess Who.</li>
+            <li>Arm physically interacts with the game board, flipping character panels in response to game state.</li>
+          </ul>
+          <h2 class="project-section-title" id="system-architecture">System architecture</h2>
+          <p class="project-copy">This project connects a symbolic guessing game to a physical board. A Raspberry Pi runs the Python game logic, and an open-source robotic arm uses a printed extension to flip character panels. The key connection is the mapping from an eliminated character to a specific board position and motion sequence.</p><figure class="architecture-figure">
+            <div class="diagram-toolbar"><span>System diagram<span class="diagram-scroll-hint"> · scroll to explore</span></span><a class="diagram-open" href="../media/architecture/guess-who.svg" target="_blank" rel="noopener noreferrer">Open full size ↗</a></div>
+            <div class="diagram-scroll" tabindex="0" role="region" aria-label="Scrollable architecture diagram">
+              <button class="image-trigger architecture-trigger" type="button" aria-label="Enlarge Guess Who game-state, board mapping and servo-control architecture">
+                <img src="../media/architecture/guess-who.svg" alt="Guess Who game-state, board mapping and servo-control architecture" width="1000" height="800" loading="lazy" />
+              </button>
+            </div>
+            <figcaption><span>The robot uses stored panel poses. Player interaction is through keyboard questions and answers.</span></figcaption>
+          </figure>
+
+          <h2 class="project-section-title" id="game-state">Representing the game</h2>
+          <p class="project-copy">The game stores 24 characters and their attributes, then maintains a list of remaining candidates as questions are answered. The computer selects from questions that can still divide the remaining candidates. When few candidates remain, or questions run out, it moves to guessing a character.</p><p class="project-copy">The same candidate-elimination step supplies the names of panels that should be lowered. This gives the software a clean transition from game rules to physical actions: first determine which characters are ruled out, then operate their board positions.</p>
+
+          <h2 class="project-section-title" id="board-to-motion">From a character name to a board position</h2>
+          <p class="project-copy">A dictionary maps each character name to one of the board’s A1–D6 positions. Each position selects stored approach and contact poses for the arm. The position routines account for the different locations on the board rather than computing a new inverse-kinematics solution for every move.</p><p class="project-copy">A motion helper interpolates between the previous joint pose and the requested pose, then sends servo commands through an Adafruit controller. After operating a panel, the arm returns to its home pose before the next board action.</p>
+
+          <h2 class="project-section-title" id="physical-integration">Physical integration and testing</h2>
+          <p class="project-copy">The arm’s printed extension gives it a way to interact with the character panels. The development code includes manual joint-angle and board-position tools for establishing the motions used by each panel routine.</p><p class="implementation-note">The archived source currently opens in manual panel-position testing mode. It also contains the game logic and the calls connecting eliminated characters to the panel routines.</p>
+          <div class="card-links"><a href="https://github.com/EAOZONE/GuessWhoCode/tree/main" target="_blank" rel="noopener noreferrer" class="btn">View Code</a></div>
+        </div>
+        <aside class="project-contents" aria-label="On this page">
+          <p class="section-label">On this page</p>
+          <a href="#demonstrations">Demonstrations</a>
+          <a href="#project-details">Project details</a>
+          <a href="#system-architecture">System architecture</a>
+          <a href="#game-state">Representing the game</a>
+          <a href="#board-to-motion">From a character name to a board position</a>
+          <a href="#physical-integration">Physical integration and testing</a>
+        </aside>
+      </div>
+      <div class="project-end"><a class="btn" data-back-to-projects href="../projects.html#guess-who">← Explore more projects</a></div>
+    </article>
+    <footer>
+      <span>© 2026 Ben Pratt</span>
+      <div class="footer-links">
+        <a href="mailto:c.ben.pratt@gmail.com">c.ben.pratt@gmail.com</a>
+        <a href="https://github.com/EAOZONE" target="_blank" rel="noopener noreferrer">GitHub</a>
+        <a href="https://www.linkedin.com/in/charles-pratt-919313291/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+      </div>
+    </footer>
+  </main>
+  <dialog class="lightbox" id="lightbox" aria-label="Project image">
+    <button type="button" class="lightbox-close">&#10005; close</button>
+    <img id="lightboxImg" alt="" />
+  </dialog>
+</body>
+</html>

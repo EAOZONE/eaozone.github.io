@@ -3,7 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Charles Pratt — Software Engineer</title>
+<title>Résumé — Ben Pratt</title>
+<meta name="description" content="Ben Pratt’s robotics research experience, education, and selected engineering projects.">
+<link rel="stylesheet" href="css/style.css">
 <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;800&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -11,9 +13,9 @@
     --surface: #0d1117;
     --border: #1e2d3d;
     --accent: #00d4ff;
-    --accent2: #7c3aed;
+    --accent2: #aa97ff;
     --text: #c9d1d9;
-    --text-dim: #6e7681;
+    --text-dim: #92a4b8;
     --text-bright: #f0f6fc;
     --green: #3fb950;
     --mono: 'Space Mono', monospace;
@@ -51,6 +53,10 @@
     z-index: 1;
   }
 
+  main.container { margin-top: var(--nav-h); }
+  .resume-nav .nav-logo { color: var(--accent); }
+  .container a { overflow-wrap: anywhere; }
+
   /* Header */
   header {
     margin-bottom: 56px;
@@ -58,11 +64,10 @@
   }
 
   .header-top {
-    display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: start;
     gap: 24px;
-    flex-wrap: wrap;
   }
 
   .name-block {}
@@ -78,7 +83,7 @@
 
   h1 {
     font-family: var(--sans);
-    font-size: clamp(36px, 6vw, 56px);
+    font-size: clamp(32px, 4.5vw, 44px);
     font-weight: 800;
     color: var(--text-bright);
     line-height: 1.05;
@@ -431,7 +436,8 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    flex-wrap: gap;
+    flex-wrap: wrap;
+    gap: 1rem;
   }
 
   .footer-left {
@@ -503,20 +509,32 @@
   @media (max-width: 600px) {
     .projects-grid, .skills-grid { grid-template-columns: 1fr; }
     .contact-links { align-items: flex-start; }
-    .header-top { flex-direction: column; }
+    .header-top { grid-template-columns: 1fr; }
+    .container { padding: 40px 20px; }
+    .entry, .edu-card, .summary { padding: 18px; }
   }
 </style>
 </head>
 <body>
-<div class="container">
+<a class="skip-link" href="#main">Skip to content</a>
+<nav class="resume-nav" aria-label="Main navigation">
+  <div class="nav-logo">ben_pratt</div>
+  <ul class="nav-links">
+    <li><a href="index.html">About</a></li>
+    <li><a href="resume.html" class="active" aria-current="page">Resume</a></li>
+    <li><a href="projects.html">Projects</a></li>
+    <li><a href="contact.html">Contact</a></li>
+  </ul>
+</nav>
+<main class="container" id="main" tabindex="-1">
 
   <!-- HEADER -->
   <header>
     <div class="header-top">
       <div class="name-block">
         <div class="label">// portfolio resume</div>
-        <h1>Charles <span>Pratt</span></h1>
-        <p class="tagline">software engineer · AI systems · robotics</p>
+        <h1>Charles “Ben” <span>Pratt</span></h1>
+        <p class="tagline">robotics · perceptive locomotion · robot learning</p>
       </div>
       <div class="contact-links">
         <a href="mailto:c.ben.pratt@gmail.com"><span class="dot"></span>c.ben.pratt@gmail.com</a>
@@ -528,7 +546,7 @@
     </div>
     <div class="divider"></div>
     <div class="summary">
-      Research-oriented software engineer and CS student with end-to-end experience building and deploying AI systems — from data collection and model training through real-world execution. Experienced integrating large language models, reinforcement learning-adjacent policies, and autonomous pipelines in fast-paced research environments. Proven ability to own ambiguous projects independently and collaborate closely with researchers to turn ideas into working systems.
+      Computer science student at the University of Florida, graduating in May 2027. I investigate how terrain observations and training rewards affect humanoid locomotion. My research experience includes adapting walking rewards, comparing perception and training approaches, and integrating demonstration collection, learned manipulation policies, and robot control.
     </div>
   </header>
 
@@ -538,9 +556,9 @@
     <div class="edu-card">
       <div>
         <div class="edu-degree">B.S. Computer Science</div>
-        <div class="edu-school">University of Florida · Gainesville, FL · Aug 2023 – May 2027</div>
+        <div class="edu-school">University of Florida · Gainesville, FL · Expected May 2027</div>
         <div class="edu-school">Minor in Digital Arts and Sciences</div>
-        <div class="courses">Machine Learning (Grad) · Natural Language Processing · Algorithm Abstraction & Design<br>Autonomous Robots · Competitive Programming · Operating Systems · Info & Database Systems</div>
+        <div class="courses">Autonomous Robots · Machine Learning (graduate)<br>Mathematics for Intelligent Systems · Linear Algebra</div>
       </div>
       <div class="edu-right">
         <div class="gpa-badge">GPA 3.85</div>
@@ -550,35 +568,69 @@
 
   <!-- SKILLS -->
   <section>
-    <div class="section-header"><h2>Technical Skills</h2></div>
+    <div class="section-header"><h2>Skills</h2></div>
     <div class="skills-grid">
       <div class="skill-block">
-        <div class="skill-block-label">Languages & Tools</div>
+        <div class="skill-block-label">Reinforcement Learning</div>
+        <div class="skill-tags">
+          <span class="tag">PPO</span>
+          <span class="tag">Actor-Critic</span>
+          <span class="tag">Reward Design</span>
+          <span class="tag">Domain Randomization</span>
+          <span class="tag">Sim-to-Real Transfer</span>
+        </div>
+      </div>
+      <div class="skill-block">
+        <div class="skill-block-label">Simulation &amp; ML</div>
+        <div class="skill-tags">
+          <span class="tag">Isaac Lab</span>
+          <span class="tag">Isaac Gym</span>
+          <span class="tag">MuJoCo</span>
+          <span class="tag">PyTorch</span>
+          <span class="tag">Diffusion Policy</span>
+          <span class="tag">Imitation Learning</span>
+          <span class="tag">GR00T</span>
+          <span class="tag">SmolVLA</span>
+        </div>
+      </div>
+      <div class="skill-block">
+        <div class="skill-block-label">Robotics &amp; Control</div>
+        <div class="skill-tags">
+          <span class="tag">ROS 2</span>
+          <span class="tag">Cartesian Impedance Control</span>
+          <span class="tag">Inverse Kinematics</span>
+          <span class="tag">Contact Dynamics</span>
+          <span class="tag">State Estimation</span>
+          <span class="tag">SLAM</span>
+          <span class="tag">Motion Planning</span>
+          <span class="tag">Humanoid &amp; Legged Locomotion</span>
+        </div>
+      </div>
+      <div class="skill-block">
+        <div class="skill-block-label">Perception</div>
+        <div class="skill-tags">
+          <span class="tag">RealSense RGB-D</span>
+          <span class="tag">LiDAR</span>
+          <span class="tag">Elevation Mapping</span>
+          <span class="tag">OpenCV</span>
+          <span class="tag">Sensor Calibration</span>
+        </div>
+      </div>
+      <div class="skill-block">
+        <div class="skill-block-label">Software</div>
         <div class="skill-tags">
           <span class="tag">Python</span>
           <span class="tag">C++</span>
           <span class="tag">Java</span>
-          <span class="tag">PyTorch</span>
-          <span class="tag">ROS2</span>
-          <span class="tag">OpenCV</span>
-          <span class="tag">SQL</span>
-          <span class="tag">React</span>
-          <span class="tag">Git</span>
+          <span class="tag">C</span>
+          <span class="tag">C#</span>
+          <span class="tag">Rust</span>
+          <span class="tag">TypeScript</span>
           <span class="tag">Linux</span>
+          <span class="tag">Git</span>
           <span class="tag">CI/CD</span>
-        </div>
-      </div>
-      <div class="skill-block">
-        <div class="skill-block-label">AI & Research</div>
-        <div class="skill-tags">
-          <span class="tag">LLMs</span>
-          <span class="tag">Reinforcement Learning</span>
-          <span class="tag">Diffusion Policies</span>
-          <span class="tag">Imitation Learning</span>
-          <span class="tag">RLHF</span>
-          <span class="tag">Model Training</span>
-          <span class="tag">Real-Time Inference</span>
-          <span class="tag">Experiment Design</span>
+          <span class="tag">Docker</span>
+          <span class="tag">AWS</span>
         </div>
       </div>
     </div>
@@ -586,87 +638,76 @@
 
   <!-- EXPERIENCE -->
   <section>
-    <div class="section-header"><h2>Research Experience</h2></div>
-
+    <div class="section-header"><h2>Work Experience</h2></div>
     <div class="entry">
       <div class="entry-header">
-        <div class="entry-title">AI Research Engineering Intern</div>
-        <div class="entry-meta">May – Aug 2025</div>
+        <div class="entry-title">RL Locomotion Intern</div>
+        <div class="entry-meta">Aug 2026 – Present</div>
       </div>
-      <div class="entry-sub">Institute for Human and Machine Cognition · Pensacola, FL</div>
+      <div class="entry-sub">Persona AI · Pensacola, FL</div>
       <ul>
-        <li>Owned end-to-end development of an autonomous AI pipeline for the Unitree H1-2 humanoid — from VR-based teleoperation data collection through diffusion policy training and live deployment on physical hardware.</li>
-        <li>Integrated LLM-based planning to translate natural language task commands into structured execution goals, bridging high-level reasoning with low-level robot control.</li>
-        <li>Bridged Python-based AI frameworks (Lerobot) with Java control systems via ROS2, enabling cross-language research workflows and rapid iteration on learned policies.</li>
+        <li>Adapted ray-based foot-placement rewards in an existing humanoid walking environment; course completion improved from 80% to 95% over 1,000 simulation episodes per policy, with slightly slower walking.</li>
+        <li>Trained a policy that was tested on hardware, where the humanoid ascended and descended a full flight of stairs.</li>
+        <li>Compared two perception and training approaches: a depth-image CNN distilled from a privileged height-map teacher, and a height-map MLP trained with actor-critic learning and a noise curriculum.</li>
+        <li>In 100 simulation trials per policy, depth and height-map approaches reached the destination at an average speed of at least 0.54 m/s in 95% and 90% of trials, respectively; neither policy fell.</li>
+        <li>Traced lost grated-stair geometry to depth-image resizing by comparing recorded sensor footage with policy inputs.</li>
+        <li>Evaluated an additional LiDAR/depth policy in simulation: it improved grated-stair ascent and descent but performed worse on ordinary stairs.</li>
       </ul>
     </div>
 
     <div class="entry">
       <div class="entry-header">
-        <div class="entry-title">Research Engineering Intern</div>
-        <div class="entry-meta">May – Aug 2024</div>
+        <div class="entry-title">Robotics Research Intern</div>
+        <div class="entry-meta">Summers 2025 &amp; 2026</div>
       </div>
       <div class="entry-sub">Institute for Human and Machine Cognition · Pensacola, FL</div>
       <ul>
-        <li>Built sub-100ms motion capture pipelines processing synchronized multi-sensor streams to drive real-time control of three robotic platforms: Psyonic Ability Hands, Franka Arms, and humanoid Nadia.</li>
-        <li>Developed evaluation and visualization tools that enabled researchers to rapidly interpret system behavior and iterate on experiments during live trials.</li>
+        <li>2026: Built Isaac Lab lever-turning tasks and a GR00T training pipeline using approximately 20 real and 200 simulated demonstrations; wrote a Java log converter and integrated Isaac Teleop's simulation-data converter.</li>
+        <li>Adapted NVIDIA inverse-kinematics code and corrected a quaternion-convention mismatch across simulators; lever turning succeeded in 95% of 1,000 simulation trials and in one hardware trial.</li>
+        <li>2025: Collected demonstrations, trained LeRobot diffusion policies, and deployed them on the Unitree H1-2 through a Python-Java/ROS 2 integration.</li>
       </ul>
     </div>
   </section>
 
-  <!-- LEADERSHIP -->
+  <!-- PROJECTS AND LEADERSHIP -->
   <section>
-    <div class="section-header"><h2>Leadership</h2></div>
+    <div class="section-header"><h2>Projects &amp; Leadership</h2></div>
     <div class="entry">
       <div class="entry-header">
         <div class="entry-title">Design Team Captain</div>
-        <div class="entry-meta">Aug 2024 – Present</div>
+        <div class="entry-meta">Aug 2024 – May 2026</div>
       </div>
-      <div class="entry-sub">Gator Theme Park Engineering & Design · Gainesville, FL</div>
+      <div class="entry-sub">Gator Theme Park Engineering &amp; Design · Gainesville, FL</div>
       <ul>
-        <li>Independently scoped and led development of an animatronic control system — designing architecture, coordinating cross-functional subteams, and delivering a working system end-to-end.</li>
-        <li>Drove agile workflows across mechanical, electrical, and software teams; built and shipped iteratively under tight timelines with real deployment constraints.</li>
+        <li>Wrote Mosquitto MQTT communication and IR sensor sequencing for an inverted dark ride prototype; supported another student's track-actuation work.</li>
+        <li>Helped lead approximately 50 students; proposed subsystem work sessions and helped introduce full-group design reviews every fourth meeting to resolve integration issues.</li>
+      </ul>
+    </div>
+
+    <div class="entry">
+      <div class="entry-header">
+        <div class="entry-title">SmolVLA Block Placement</div>
+        <div class="entry-meta">2025</div>
+      </div>
+      <div class="entry-sub">University of Florida · Autonomous Robots Course</div>
+      <ul>
+        <li>Trained SmolVLA on 200 SO-101 leader-follower demonstrations to pick a requested colored block and place it at the center of a coaster.</li>
+        <li>Built ROS 2 nodes to pass LLM task instructions and camera images to the VLA policy and execute its predicted arm actions.</li>
+      </ul>
+    </div>
+
+    <div class="entry">
+      <div class="entry-header">
+        <div class="entry-title">Animatronic Gator Head</div>
+      </div>
+      <div class="entry-sub">Gator Theme Park Engineering &amp; Design</div>
+      <ul>
+        <li>Built a PySide6 interface for manual control and CSV animation export/playback, with serial commands driving jaw, eye, and eyebrow servos through Arduino and a PCA9685 controller.</li>
+        <li>Implemented FFT-based audio analysis to map audio amplitude to jaw motion, making the gator appear to talk.</li>
       </ul>
     </div>
   </section>
 
-  <!-- PROJECTS -->
-  <section>
-    <div class="section-header"><h2>Projects</h2></div>
-    <div class="projects-grid">
-
-      <div class="project-card">
-        <div class="project-name">Ride Design Vehicle</div>
-        <div class="project-context">Gator TPED</div>
-        <div class="project-desc">Electrical systems architecture for a fully inverted dark ride prototype where the vehicle hangs beneath the track. Developed a WiFi-based MQTT communication layer using Mosquitto to coordinate ride vehicles, track systems, and the central server — including servo-driven switch tracks, motorized drop-track actuation, and IR beam-break sensors for sequencing.</div>
-      </div>
-
-      <div class="project-card">
-        <div class="project-name">Learning-Based Robotic Manipulation</div>
-        <div class="project-context">Autonomous Robotics Course</div>
-        <div class="project-desc">Modular autonomous agent pipeline with an LLM planning node that parses natural language into structured goals, a visuomotor policy for physical execution, and ROS2-based infrastructure. Ran full experimental cycle: teleoperation data collection → imitation learning → policy evaluation → hardware deployment.</div>
-      </div>
-
-      <div class="project-card">
-        <div class="project-name">Animatronic Gator Head</div>
-        <div class="project-context">Gator TPED</div>
-        <div class="project-desc">Cross-platform control pipeline (Unity → Python → embedded) with FFT-based audio-reactive behaviors and CSV-driven sim-to-real animation deployment.</div>
-      </div>
-
-      <div class="project-card">
-        <div class="project-name">Movie Graph Visualizer</div>
-        <div class="project-context">Data Structures & Algorithms</div>
-        <div class="project-desc">BFS and Dijkstra pathfinding over a 45,000-node movie-actor graph with an interactive HTML/JS visualization to explore shortest-path connections between films.</div>
-      </div>
-
-      <div class="project-card">
-        <div class="project-name">Jar of Joy</div>
-        <div class="project-context">Software Engineering Course</div>
-        <div class="project-desc">Full-stack web app with Python/MySQL backend and React/JS frontend, implementing user authentication and a dynamic database-driven experience.</div>
-      </div>
-
-    </div>
-  </section>
 
   <!-- FOOTER -->
   <footer>
@@ -678,6 +719,6 @@
     <div class="status"><div class="pulse"></div>open to opportunities</div>
   </footer>
 
-</div>
+</main>
 </body>
 </html>

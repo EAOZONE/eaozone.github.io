@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Java pipeline mapping full-body pose from an 8-camera Blackfly MoCap rig to three different robot platforms." />
+  <title>Motion Capture System — Ben Pratt</title>
+  <link rel="stylesheet" href="../css/style.css" />
+  <link rel="stylesheet" href="../css/project.css" />
+  <script src="../js/project.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <div class="grid-bg"></div>
+  <nav aria-label="Main navigation">
+    <div class="nav-logo">ben_pratt</div>
+    <ul class="nav-links">
+      <li><a href="../index.html">About</a></li>
+      <li><a href="../resume.html">Resume</a></li>
+      <li><a href="../projects.html" class="active" aria-current="true">Projects</a></li>
+      <li><a href="../contact.html">Contact</a></li>
+    </ul>
+  </nav>
+  <main id="main" tabindex="-1" data-project="motion-capture">
+    <article class="project-page">
+      <a class="back-link" data-back-to-projects href="../projects.html#motion-capture">← Back to projects</a>
+      <header class="project-header">
+        <div class="project-intro">
+          <p class="project-meta">Research · IHMC 2024</p>
+          <h1>Motion Capture System</h1>
+          <p class="project-summary">Java pipeline mapping full-body pose from an 8-camera Blackfly MoCap rig to three different robot platforms.</p>
+        </div>
+        <figure class="project-visual"><button class="image-trigger" type="button" aria-label="Enlarge Motion Capture System image"><img class="project-image" src="../media/MoCap.png" alt="Motion Capture System" style="object-position:center top;" /><span class="image-hint" aria-hidden="true">View full image ↗</span></button></figure>
+      </header>
+      <div class="project-layout">
+        <div class="project-content">
+          <section class="project-media" aria-labelledby="demonstrations"><h2 class="project-section-title" id="demonstrations">Demonstrations</h2><div class="video-options" role="group" aria-label="Choose a demonstration"><button type="button" class="video-choice" data-video="video-mc-franka" aria-controls="video-mc-franka" aria-pressed="true">Franka Arms</button>
+<button type="button" class="video-choice" data-video="video-mc-full" aria-controls="video-mc-full" aria-pressed="false">Full Robot MoCap</button>
+<button type="button" class="video-choice" data-video="video-mc-lab" aria-controls="video-mc-lab" aria-pressed="false">Lab Demo</button></div><figure class="video-panel" id="video-mc-franka">
+              <video controls playsinline preload="metadata" aria-labelledby="caption-mc-franka"><source src="../media/09_Untitled_video_Clipchamp.mp4" type="video/mp4"><a href="../media/09_Untitled_video_Clipchamp.mp4">Open video</a></video>
+              <figcaption id="caption-mc-franka">Franka Arms</figcaption>
+            </figure>
+<figure class="video-panel" id="video-mc-full">
+              <video controls playsinline preload="metadata" aria-labelledby="caption-mc-full"><source src="../media/11_PXL_20240813_153804993.mp4" type="video/mp4"><a href="../media/11_PXL_20240813_153804993.mp4">Open video</a></video>
+              <figcaption id="caption-mc-full">Full Robot MoCap</figcaption>
+            </figure>
+<figure class="video-panel" id="video-mc-lab">
+              <video controls playsinline preload="metadata" aria-labelledby="caption-mc-lab"><source src="../media/08_20240719_120036.mp4" type="video/mp4"><a href="../media/08_20240719_120036.mp4">Open video</a></video>
+              <figcaption id="caption-mc-lab">Lab Demo</figcaption>
+            </figure></section>
+          <h2 class="project-section-title" id="project-details">Project details</h2>
+<ul class="contribution-list">
+            <li>I used Captury pose data from an eight-camera Blackfly setup to drive Psyonic Ability Hands, Franka arms, and IHMC’s Nadia humanoid.</li>
+            <li>Extended system to drive IHMC's Nadia full humanoid robot in collaboration with a senior researcher.</li>
+          </ul>
+          <h2 class="project-section-title" id="system-architecture">System architecture</h2>
+          <p class="project-copy">The project connected an eight-camera motion-capture setup to robot control. Captury supplied tracked human poses; my Java integration mapped that information into commands for robotic systems. The diagram focuses on the Psyonic hand-control path.</p><figure class="architecture-figure">
+            <div class="diagram-toolbar"><span>System diagram<span class="diagram-scroll-hint"> · scroll to explore</span></span><a class="diagram-open" href="../media/architecture/motion-capture.svg" target="_blank" rel="noopener noreferrer">Open full size ↗</a></div>
+            <div class="diagram-scroll" tabindex="0" role="region" aria-label="Scrollable architecture diagram">
+              <button class="image-trigger architecture-trigger" type="button" aria-label="Enlarge Captury tracking, Java finger mapping and robotic hand-control architecture">
+                <img src="../media/architecture/motion-capture.svg" alt="Captury tracking, Java finger mapping and robotic hand-control architecture" width="1000" height="790" loading="lazy" />
+              </button>
+            </div>
+            <figcaption><span>The hand-control path shown here is one part of the project. The videos also show Franka arm and Nadia humanoid demonstrations.</span></figcaption>
+          </figure>
+
+          <h2 class="project-section-title" id="tracking-retargeting">Tracking and retargeting</h2>
+          <p class="project-copy">The Java application connects to the Captury tracking system, acquires the tracked actor, and reads local joint rotations through the existing Captury interface. The motion-capture system performs the tracking; the integration work begins with the resulting pose data.</p><p class="project-copy">For the hands, the mapping combines tracked finger rotations into commands for the left and right Psyonic Ability Hands. Thumb motion uses a different mapping from the other fingers. Human finger motion and robotic-hand actuation do not share an identical representation, so that conversion is an explicit part of the pipeline.</p>
+
+          <h2 class="project-section-title" id="stable-hand-commands">Conditioning the hand commands</h2>
+          <p class="project-copy">The hand-control path includes smoothing, a deadband, and joint limits. Smoothing reduces changes between successive commands; the deadband suppresses small variations; limits bound the requested finger angles. These adjustments are applied according to the finger mapping, rather than treating every tracked joint identically.</p><p class="project-copy">The resulting commands pass through IHMC’s existing Ability Hand Bluetooth interface. Runtime variables support adjustment of the mapping and filtering parameters while observing the hand response.</p>
+
+          <h2 class="project-section-title" id="robot-demonstrations">From hands to arms and a humanoid</h2>
+          <p class="project-copy">The project’s demonstrations include Psyonic hands, Franka arms, and the Nadia humanoid. I extended the full-body integration to Nadia in collaboration with a senior researcher. The videos above show the hand, arm, and humanoid demonstrations.</p>
+        </div>
+        <aside class="project-contents" aria-label="On this page">
+          <p class="section-label">On this page</p>
+          <a href="#demonstrations">Demonstrations</a>
+          <a href="#project-details">Project details</a>
+          <a href="#system-architecture">System architecture</a>
+          <a href="#tracking-retargeting">Tracking and retargeting</a>
+          <a href="#stable-hand-commands">Conditioning the hand commands</a>
+          <a href="#robot-demonstrations">From hands to arms and a humanoid</a>
+        </aside>
+      </div>
+      <div class="project-end"><a class="btn" data-back-to-projects href="../projects.html#motion-capture">← Explore more projects</a></div>
+    </article>
+    <footer>
+      <span>© 2026 Ben Pratt</span>
+      <div class="footer-links">
+        <a href="mailto:c.ben.pratt@gmail.com">c.ben.pratt@gmail.com</a>
+        <a href="https://github.com/EAOZONE" target="_blank" rel="noopener noreferrer">GitHub</a>
+        <a href="https://www.linkedin.com/in/charles-pratt-919313291/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+      </div>
+    </footer>
+  </main>
+  <dialog class="lightbox" id="lightbox" aria-label="Project image">
+    <button type="button" class="lightbox-close">&#10005; close</button>
+    <img id="lightboxImg" alt="" />
+  </dialog>
+</body>
+</html>

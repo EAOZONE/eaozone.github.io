@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Custom VR interaction systems for controlling IHMC&#x27;s humanoid robots — camera bounding boxes, radial menus, arm/hand control." />
+  <title>VR Robot Controls — Ben Pratt</title>
+  <link rel="stylesheet" href="../css/style.css" />
+  <link rel="stylesheet" href="../css/project.css" />
+  <script src="../js/project.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <div class="grid-bg"></div>
+  <nav aria-label="Main navigation">
+    <div class="nav-logo">ben_pratt</div>
+    <ul class="nav-links">
+      <li><a href="../index.html">About</a></li>
+      <li><a href="../resume.html">Resume</a></li>
+      <li><a href="../projects.html" class="active" aria-current="true">Projects</a></li>
+      <li><a href="../contact.html">Contact</a></li>
+    </ul>
+  </nav>
+  <main id="main" tabindex="-1" data-project="vr-robot-controls">
+    <article class="project-page">
+      <a class="back-link" data-back-to-projects href="../projects.html#vr-robot-controls">← Back to projects</a>
+      <header class="project-header">
+        <div class="project-intro">
+          <p class="project-meta">Research · IHMC 2023</p>
+          <h1>VR Robot Controls</h1>
+          <p class="project-summary">Custom VR interaction systems for controlling IHMC's humanoid robots — camera bounding boxes, radial menus, arm/hand control.</p>
+        </div>
+        <figure class="project-visual"><button class="image-trigger" type="button" aria-label="Enlarge VR Robot Controls image"><img class="project-image" src="../media/nadia_edited.jpg" alt="Nadia Robot" /><span class="image-hint" aria-hidden="true">View full image ↗</span></button></figure>
+      </header>
+      <div class="project-layout">
+        <div class="project-content">
+          <section class="project-media" aria-labelledby="demonstrations"><h2 class="project-section-title" id="demonstrations">Demonstrations</h2><div class="video-options" role="group" aria-label="Choose a demonstration"><button type="button" class="video-choice" data-video="video-vr-door" aria-controls="video-vr-door" aria-pressed="true">Door Navigation</button>
+<button type="button" class="video-choice" data-video="video-vr-sim1" aria-controls="video-vr-sim1" aria-pressed="false">Nadia simulation UI 1</button>
+<button type="button" class="video-choice" data-video="video-vr-sim2" aria-controls="video-vr-sim2" aria-pressed="false">Nadia simulation UI 2</button>
+<button type="button" class="video-choice" data-video="video-vr-sim3" aria-controls="video-vr-sim3" aria-pressed="false">Nadia simulation UI 3</button>
+<button type="button" class="video-choice" data-video="video-vr-view" aria-controls="video-vr-view" aria-pressed="false">VR View</button></div><figure class="video-panel" id="video-vr-door">
+              <video controls playsinline preload="metadata" aria-labelledby="caption-vr-door"><source src="../media/03_vid_20230811_170723.mp4" type="video/mp4"><a href="../media/03_vid_20230811_170723.mp4">Open video</a></video>
+              <figcaption id="caption-vr-door">Door Navigation</figcaption>
+            </figure>
+<figure class="video-panel" id="video-vr-sim1">
+              <video controls playsinline preload="metadata" aria-labelledby="caption-vr-sim1"><source src="../media/04_Nadia_Simulation_UI_2023-10-17_11-55-22.mp4" type="video/mp4"><a href="../media/04_Nadia_Simulation_UI_2023-10-17_11-55-22.mp4">Open video</a></video>
+              <figcaption id="caption-vr-sim1">Nadia simulation UI 1</figcaption>
+            </figure>
+<figure class="video-panel" id="video-vr-sim2">
+              <video controls playsinline preload="metadata" aria-labelledby="caption-vr-sim2"><source src="../media/05_Nadia_Simulation_UI_2023-10-17_11-54-18.mp4" type="video/mp4"><a href="../media/05_Nadia_Simulation_UI_2023-10-17_11-54-18.mp4">Open video</a></video>
+              <figcaption id="caption-vr-sim2">Nadia simulation UI 2</figcaption>
+            </figure>
+<figure class="video-panel" id="video-vr-sim3">
+              <video controls playsinline preload="metadata" aria-labelledby="caption-vr-sim3"><source src="../media/06_Nadia_Simulation_UI_2023-10-17_11-52-48.mp4" type="video/mp4"><a href="../media/06_Nadia_Simulation_UI_2023-10-17_11-52-48.mp4">Open video</a></video>
+              <figcaption id="caption-vr-sim3">Nadia simulation UI 3</figcaption>
+            </figure>
+<figure class="video-panel" id="video-vr-view">
+              <video controls playsinline preload="metadata" aria-labelledby="caption-vr-view"><source src="../media/07_VR_View_2023-10-17_12-15-31.mp4" type="video/mp4"><a href="../media/07_VR_View_2023-10-17_12-15-31.mp4">Open video</a></video>
+              <figcaption id="caption-vr-view">VR View</figcaption>
+            </figure></section>
+          <h2 class="project-section-title" id="project-details">Project details</h2>
+<ul class="contribution-list">
+            <li>Built a movable camera bounding box for Blackfly projections so operators can reframe views without leaving VR.</li>
+            <li>Designed a radial menu triggered by controller proximity to robot hands — eliminates need to exit VR for pose changes.</li>
+            <li>Extended locomotion controls for remote teleoperation of IHMC's humanoid robot platform.</li>
+          </ul>
+          <h2 class="project-section-title" id="interaction-overview">Operator interaction overview</h2>
+          <p class="project-copy">This work focused on the interfaces an operator uses while teleoperating IHMC’s humanoid robots. I added camera-view interaction, hand-pose selection, and locomotion-control features within the existing VR control environment.</p><figure class="architecture-figure">
+            <div class="diagram-toolbar"><span>System diagram<span class="diagram-scroll-hint"> · scroll to explore</span></span><a class="diagram-open" href="../media/architecture/vr-robot-controls.svg" target="_blank" rel="noopener noreferrer">Open full size ↗</a></div>
+            <div class="diagram-scroll" tabindex="0" role="region" aria-label="Scrollable architecture diagram">
+              <button class="image-trigger architecture-trigger" type="button" aria-label="Enlarge VR camera interaction, hand-pose menu and locomotion-control overview">
+                <img src="../media/architecture/vr-robot-controls.svg" alt="VR camera interaction, hand-pose menu and locomotion-control overview" width="1000" height="700" loading="lazy" />
+              </button>
+            </div>
+            <figcaption><span>The diagram shows the operator-facing features and their relationship to the existing robot-control software.</span></figcaption>
+          </figure>
+
+          <h2 class="project-section-title" id="camera-view">Reframing the camera view</h2>
+          <p class="project-copy">I built a movable bounding box for Blackfly camera projections. It lets an operator adjust the framing of a camera view while remaining in the VR interface. The VR View demonstration shows the operator interacting with the projected view.</p>
+
+          <h2 class="project-section-title" id="hand-pose-menu">Selecting hand poses in VR</h2>
+          <p class="project-copy">The radial menu is triggered by bringing a controller near the robot’s hands. That keeps pose selection close to the part of the robot being controlled and lets the operator choose hand poses within VR. I designed the menu interaction and connected it to the control interface.</p>
+
+          <h2 class="project-section-title" id="locomotion-interface">Locomotion controls</h2>
+          <p class="project-copy">I also extended the locomotion controls used for remote humanoid teleoperation. The existing robot-control software handled the robot platform; my work focused on the operator-facing interactions. The demonstrations above show the interface features in use.</p>
+        </div>
+        <aside class="project-contents" aria-label="On this page">
+          <p class="section-label">On this page</p>
+          <a href="#demonstrations">Demonstrations</a>
+          <a href="#project-details">Project details</a>
+          <a href="#interaction-overview">Operator interaction overview</a>
+          <a href="#camera-view">Reframing the camera view</a>
+          <a href="#hand-pose-menu">Selecting hand poses in VR</a>
+          <a href="#locomotion-interface">Locomotion controls</a>
+        </aside>
+      </div>
+      <div class="project-end"><a class="btn" data-back-to-projects href="../projects.html#vr-robot-controls">← Explore more projects</a></div>
+    </article>
+    <footer>
+      <span>© 2026 Ben Pratt</span>
+      <div class="footer-links">
+        <a href="mailto:c.ben.pratt@gmail.com">c.ben.pratt@gmail.com</a>
+        <a href="https://github.com/EAOZONE" target="_blank" rel="noopener noreferrer">GitHub</a>
+        <a href="https://www.linkedin.com/in/charles-pratt-919313291/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+      </div>
+    </footer>
+  </main>
+  <dialog class="lightbox" id="lightbox" aria-label="Project image">
+    <button type="button" class="lightbox-close">&#10005; close</button>
+    <img id="lightboxImg" alt="" />
+  </dialog>
+</body>
+</html>

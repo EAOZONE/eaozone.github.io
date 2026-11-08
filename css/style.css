@@ -9,9 +9,9 @@
   --border:    #1e2d3d;
   --border2:   #2a3f55;
   --text:      #cdd9e5;
-  --muted:     #586e87;
+  --muted:     #92a4b8;
   --accent:    #00e5ff;
-  --accent2:   #7b61ff;
+  --accent2:   #aa97ff;
   --accent3:   #ff4ecd;
   --green:     #39d353;
   --glow:      0 0 20px rgba(0,229,255,0.25);
@@ -38,6 +38,12 @@ a { color: var(--accent); text-decoration: none; transition: color .2s; }
 a:hover { color: #fff; }
 img { max-width: 100%; display: block; }
 button { cursor: pointer; font-family: var(--font-body); }
+[hidden] { display: none !important; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; }
+main { scroll-margin-top: calc(var(--nav-h) + 1rem); }
+.skip-link { position: fixed; top: .5rem; left: 1rem; z-index: 1000; padding: .6rem 1rem; background: var(--bg2); border: 1px solid var(--accent); transform: translateY(-160%); }
+.skip-link:focus { transform: translateY(0); }
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; border: 0; }
 
 
 /* ─── NAV ────────────────────────────────────────────────────────────────── */
@@ -180,6 +186,7 @@ footer {
 .footer-links {
   display: flex;
   gap: 1.5rem;
+  flex-wrap: wrap;
 }
 .footer-links a {
   color: var(--muted);
@@ -209,8 +216,15 @@ footer {
 
 /* ─── MOBILE ─────────────────────────────────────────────────────────────── */
 @media (max-width: 640px) {
-  nav { padding: 0 1.25rem; }
-  .nav-links { gap: 1.25rem; }
+  :root { --nav-h: 100px; }
+  nav { padding: .65rem 1.25rem; flex-direction: column; justify-content: center; gap: .4rem; }
+  .nav-links { width: 100%; justify-content: center; gap: clamp(.7rem, 4vw, 1.25rem); }
   .nav-links a { font-size: .65rem; }
+  .nav-links a { display: inline-flex; align-items: center; min-height: 40px; }
   footer { flex-direction: column; align-items: flex-start; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { animation: none !important; transition: none !important; }
 }

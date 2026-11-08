@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="I programmed the eyes, eyebrows, and mouth of our team’s animatronic gator, coordinating servo motion and an audio-reactive jaw." />
+  <title>Animatronic Gator Head — Ben Pratt</title>
+  <link rel="stylesheet" href="../css/style.css" />
+  <link rel="stylesheet" href="../css/project.css" />
+  <script src="../js/project.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <div class="grid-bg"></div>
+  <nav aria-label="Main navigation">
+    <div class="nav-logo">ben_pratt</div>
+    <ul class="nav-links">
+      <li><a href="../index.html">About</a></li>
+      <li><a href="../resume.html">Resume</a></li>
+      <li><a href="../projects.html" class="active" aria-current="true">Projects</a></li>
+      <li><a href="../contact.html">Contact</a></li>
+    </ul>
+  </nav>
+  <main id="main" tabindex="-1" data-project="animatronic-gator">
+    <article class="project-page">
+      <a class="back-link" data-back-to-projects href="../projects.html#animatronic-gator">← Back to projects</a>
+      <header class="project-header">
+        <div class="project-intro">
+          <p class="project-meta">Robotics · Gator TPED</p>
+          <h1>Animatronic Gator Head</h1>
+          <p class="project-summary">I programmed the eyes, eyebrows, and mouth of our team’s animatronic gator, coordinating servo motion and an audio-reactive jaw.</p>
+        </div>
+        <figure class="project-visual"><button class="image-trigger" type="button" aria-label="Enlarge Animatronic Gator Head image"><img class="project-image" src="../media/Animatronic.jpg" alt="Animatronic Gator Head" style="object-position:center top;" /><span class="image-hint" aria-hidden="true">View full image ↗</span></button></figure>
+      </header>
+      <div class="project-layout">
+        <div class="project-content">
+          <section class="project-media" aria-labelledby="demonstrations"><h2 class="project-section-title" id="demonstrations">Demonstrations</h2><figure class="video-panel" id="video-gator-vid">
+              <video controls playsinline preload="metadata" aria-labelledby="caption-gator-vid"><source src="../media/01_Animatronic_Video.mp4" type="video/mp4"><a href="../media/01_Animatronic_Video.mp4">Open video</a></video>
+              <figcaption id="caption-gator-vid">Eyes, brows &amp; jaw</figcaption>
+            </figure></section>
+          <h2 class="project-section-title" id="project-details">Project details</h2>
+<ul class="contribution-list">
+            <li>I wrote the embedded code to coordinate the jaw, eyes, and eyebrows using Arduino and PCA9685 servo control.</li>
+            <li>I built CSV animation export and playback to turn motion sequences into coordinated servo movement.</li>
+            <li>I mapped audio amplitude to jaw motion using FFT analysis so the gator could appear to talk.</li>
+            <li>I connected the animation and audio code to the embedded controllers. Seeing the mechanisms move together made programming physical systems especially exciting to me.</li>
+          </ul>
+          <h2 class="project-section-title" id="system-architecture">System architecture</h2>
+          <p class="project-copy">The gator’s face uses coordinated jaw, eye, and eyebrow motion. I worked on the software and electrical interfaces that turn authored expressions into servo commands. Manual control and CSV playback share the desktop-to-controller path shown below.</p><figure class="architecture-figure">
+            <div class="diagram-toolbar"><span>System diagram<span class="diagram-scroll-hint"> · scroll to explore</span></span><a class="diagram-open" href="../media/architecture/animatronic-gator.svg" target="_blank" rel="noopener noreferrer">Open full size ↗</a></div>
+            <div class="diagram-scroll" tabindex="0" role="region" aria-label="Scrollable architecture diagram">
+              <button class="image-trigger architecture-trigger" type="button" aria-label="Enlarge Animatronic gator desktop, serial and servo-control architecture">
+                <img src="../media/architecture/animatronic-gator.svg" alt="Animatronic gator desktop, serial and servo-control architecture" width="1000" height="820" loading="lazy" />
+              </button>
+            </div>
+            <figcaption><span>Three logical animation channels drive the jaw, eyes, and paired eyebrows. The separate audio-reactive behavior is described below.</span></figcaption>
+          </figure>
+
+          <h2 class="project-section-title" id="animation-authoring">Authoring and playing expressions</h2>
+          <h3 class="project-subheading">Manual control and CSV sequences</h3><p class="project-copy">The PySide6 desktop application exposes jaw, eye, and eyebrow controls. I can pose those channels manually and append the current values, together with a dwell time, to a CSV sequence. Each playback row describes one set of channel values and how long to hold it.</p><h3 class="project-subheading">Keeping the interface responsive</h3><p class="project-copy">Sequence playback runs in a Qt worker thread. Each step updates the interface preview and feeds a separate serial-command queue. Keeping playback and serial writes outside the main GUI loop lets the interface remain responsive while an expression plays.</p>
+
+          <h2 class="project-section-title" id="embedded-control">From channel values to servo motion</h2>
+          <p class="project-copy">The desktop application sends a newline-terminated, comma-separated triple of jaw, eye, and eyebrow values over USB serial. The Arduino firmware parses the line, clamps the values, and maps them to servo pulses through a PCA9685 driver over I²C.</p><p class="project-copy">The driver produces 50 Hz PWM signals for the jaw, eyes, and two eyebrow servos. A single logical eyebrow value controls the paired outputs, so the animation interface describes facial motion without requiring a separate value for every physical servo.</p>
+
+          <h2 class="project-section-title" id="audio-reactive-motion">Audio-reactive jaw motion</h2>
+          <p class="project-copy">I also implemented audio-reactive jaw movement using FFT-based audio analysis. Mapping audio amplitude to jaw motion let the gator appear to talk, alongside its programmed eye and eyebrow expressions. This was a separate behavior from the manual and CSV control path shown in the diagram.</p>
+          <div class="card-links"><span class="btn btn-ghost" style="cursor:default;">UF Theme Park Engineering</span></div>
+        </div>
+        <aside class="project-contents" aria-label="On this page">
+          <p class="section-label">On this page</p>
+          <a href="#demonstrations">Demonstrations</a>
+          <a href="#project-details">Project details</a>
+          <a href="#system-architecture">System architecture</a>
+          <a href="#animation-authoring">Authoring and playing expressions</a>
+          <a href="#embedded-control">From channel values to servo motion</a>
+          <a href="#audio-reactive-motion">Audio-reactive jaw motion</a>
+        </aside>
+      </div>
+      <div class="project-end"><a class="btn" data-back-to-projects href="../projects.html#animatronic-gator">← Explore more projects</a></div>
+    </article>
+    <footer>
+      <span>© 2026 Ben Pratt</span>
+      <div class="footer-links">
+        <a href="mailto:c.ben.pratt@gmail.com">c.ben.pratt@gmail.com</a>
+        <a href="https://github.com/EAOZONE" target="_blank" rel="noopener noreferrer">GitHub</a>
+        <a href="https://www.linkedin.com/in/charles-pratt-919313291/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+      </div>
+    </footer>
+  </main>
+  <dialog class="lightbox" id="lightbox" aria-label="Project image">
+    <button type="button" class="lightbox-close">&#10005; close</button>
+    <img id="lightboxImg" alt="" />
+  </dialog>
+</body>
+</html>
